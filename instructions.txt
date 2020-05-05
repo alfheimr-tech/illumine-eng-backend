@@ -1,0 +1,17 @@
+1. clone the repository : https://github.com/sushmitc/illumine-engnr-dev.git
+
+2. Install mongodb. Refer to this link for reference (https://www.youtube.com/watch?v=FwMwO8pXfq0). Install Robo3T for GUI.
+
+3. create a config folder in the root directory. Within config folder create two files named "dev.env" and "test.env". Put the below contents as 
+   shown in both the files. This is to seperate your test database and development database. Please ensure that you give
+   a different database name in both the .env files (i.e dev.env and test.env) :
+
+  	JWT_SECRET=*PUTANYKEYOFURCHOICE*
+	MONGODB_URL=mongodb://127.0.0.1:27017/*DATABASE NAME OF UR CHOICE* (give a different name in both the .env files)
+	PORT=3000
+
+4. npm install (this will install all the dependencies)
+
+5. npm run dev (this will run the development script)
+
+6. npm test or npm run test (this will run the test scripts)
