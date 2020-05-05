@@ -168,7 +168,7 @@ exports.engineer_forgotpassword = async (req, res) => {
 
     await engnr.save();
 
-    // sendForgotPassword(engnr.email, token);
+    sendForgotPassword(engnr.email, token);
 
     res.status(200).send({ message: 'mail sent' });
   } catch (error) {
