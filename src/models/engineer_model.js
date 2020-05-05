@@ -192,7 +192,7 @@ engineerSchema.pre('save', async function(next) {
     const token = this.createToken(true);
     this.emailVerify = false;
 
-    sendWelcomeEmail(this.email, token);
+    // sendWelcomeEmail(this.email, token);
   }
 
   next();
