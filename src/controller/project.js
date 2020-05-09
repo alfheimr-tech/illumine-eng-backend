@@ -10,15 +10,12 @@ const BidHistory = require('../models/bid_model');
 
 // ENGINEER BROWSES ALL THE PROJECTS IN OPEN STATE
 
-var locationArray = [];
-var licenceArray = [];
-var projects = [];
-var i;
 exports.browse_projects = async (req, res) => {
   try {
-    locationArray = [];
-    licenceArray = [];
-    projects = [];
+    var match = {};
+    var locationArray = [];
+    var licenceArray = [];
+    var i = null;
 
     // eslint-disable-next-line no-shadow
     await req.engnr.profession.forEach(i => {
@@ -27,60 +24,47 @@ exports.browse_projects = async (req, res) => {
     });
 
     if (req.query.location || req.query.licence) {
+      match['$and'] = [];
       if (req.query.location && !req.query.licence) {
         i = locationArray.indexOf(req.query.location);
 
-        const project = await Project.find({
+        match['$and'].push({
+          status: 'open',
           location: req.query.location,
-          licenseType: licenceArray[i],
-          status: 'open'
-        })
-          .sort({ createdAt: -1 })
-          .orFail(new Error('no data present'));
-
-        return res.status(200).send({ message: 'sent', project });
-        // eslint-disable-next-line no-else-return
+          licenseType: licenceArray[i]
+        });
       } else if (req.query.licence && !req.query.location) {
         i = licenceArray.indexOf(req.query.licence);
 
-        const project = await Project.find({
+        match['$and'].push({
+          status: 'open',
           location: locationArray[i],
-          licenseType: req.query.licence,
-          status: 'open'
-        })
-          .sort({ createdAt: -1 })
-          .orFail(new Error('no data present'));
-
-        return res.status(200).send({ message: 'sent', project });
+          licenseType: req.query.licence
+        });
       } else {
-        const project = await Project.find({
+        match['$and'].push({
+          status: 'open',
           location: req.query.location,
-          licenseType: req.query.licence,
-          status: 'open'
-        })
-          .sort({ createdAt: -1 })
-          .orFail(new Error('no data present'));
-
-        return res.status(200).send({ message: 'sent', project });
+          licenseType: req.query.licence
+        });
       }
-
-      // eslint-disable-next-line no-else-return
     } else {
+      match['$or'] = [];
       for (i = 0; i < locationArray.length; i++) {
         // eslint-disable-next-line no-await-in-loop
-        const project = await Project.find({
+        match['$or'].push({
+          status: 'open',
           location: locationArray[i],
-          licenseType: licenceArray[i],
-          status: 'open'
-        })
-          .sort({ createdAt: -1 })
-          .orFail(new Error('no data present'));
-
-        projects.push(project);
+          licenseType: licenceArray[i]
+        });
       }
-
-      res.status(200).send({ message: 'sent', projects });
     }
+
+    const project = await Project.find(match)
+      .sort({ createdAt: -1 })
+      .orFail(new Error('no data present'));
+
+    res.status(200).send({ message: 'sent', project });
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
@@ -249,19 +233,16 @@ exports.active_bids = async (req, res) => {
       {
         $project: {
           bids: 1,
+          totalbids_received: 1,
           project: {
             $map: {
               input: '$project',
               as: 'pro',
-              in: [
-                {
-                  name: '$$pro.projectName',
-                  description: '$$pro.description',
-                  location: '$$pro.location',
-                  license: '$$pro.licenseType',
-                  status: '$$pro.status'
-                }
-              ]
+              in: {
+                name: '$$pro.projectName',
+                licence: '$$pro.licenseType',
+                location: '$$pro.location'
+              }
             }
           }
         }
