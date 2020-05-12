@@ -13,6 +13,10 @@ const BidHistory = require('../models/bid_model');
 exports.browse_projects = async (req, res) => {
   try {
     var match = {};
+
+    match.location = [];
+    match.licence = [];
+
     var locationArray = [];
     var licenceArray = [];
     var i = null;
@@ -23,48 +27,70 @@ exports.browse_projects = async (req, res) => {
       licenceArray.push(i.licence);
     });
 
+    console.log(locationArray);
+
     if (req.query.location || req.query.licence) {
-      match['$and'] = [];
       if (req.query.location && !req.query.licence) {
         i = locationArray.indexOf(req.query.location);
 
-        match['$and'].push({
-          status: 'open',
-          location: req.query.location,
-          licenseType: licenceArray[i]
-        });
+        match.status = 'open';
+        match.location[0] = req.query.location;
+        match.licence[0] = licenceArray[i];
       } else if (req.query.licence && !req.query.location) {
         i = licenceArray.indexOf(req.query.licence);
 
-        match['$and'].push({
-          status: 'open',
-          location: locationArray[i],
-          licenseType: req.query.licence
-        });
+        match.status = 'open';
+        match.location[0] = locationArray[i];
+        match.licence[0] = req.query.licence;
       } else {
-        match['$and'].push({
-          status: 'open',
-          location: req.query.location,
-          licenseType: req.query.licence
-        });
+        match.status = 'open';
+        match.location[0] = req.query.location;
+        match.licence[0] = req.query.licence;
       }
     } else {
-      match['$or'] = [];
       for (i = 0; i < locationArray.length; i++) {
-        // eslint-disable-next-line no-await-in-loop
-        match['$or'].push({
-          status: 'open',
-          location: locationArray[i],
-          licenseType: licenceArray[i]
-        });
+        match.status = 'open';
+        match.location[i] = locationArray[i];
+        match.licence[i] = licenceArray[i];
       }
     }
 
-    const project = await Project.find(match)
-      .sort({ createdAt: -1 })
-      .orFail(new Error('no data present'));
+    const project = await BidHistory.aggregate([
+      {
+        $match: {
+          'bids.engineerID': { $ne: mongoose.Types.ObjectId(req.engnr.id) }
+        }
+      },
+      {
+        $lookup: {
+          from: 'projects',
+          localField: 'projectID',
+          foreignField: '_id',
+          as: 'project'
+        }
+      },
+      {
+        $match: {
+          $and: [
+            {
+              'project.status': match.status,
+              'project.location': { $in: match.location },
+              'project.licenseType': { $in: match.licence }
+            }
+          ]
+        }
+      },
+      {
+        $project: {
+          bids: 0,
+          projectID: 0,
+          _id: 0,
+          __v: 0
+        }
+      }
+    ]);
 
-    res.status(200).send({ message: 'sent', project });
+    res.status(200).send(project);
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
