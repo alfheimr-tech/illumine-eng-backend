@@ -27,8 +27,6 @@ exports.browse_projects = async (req, res) => {
       licenceArray.push(i.licence);
     });
 
-    console.log(locationArray);
-
     if (req.query.location || req.query.licence) {
       if (req.query.location && !req.query.licence) {
         i = locationArray.indexOf(req.query.location);
