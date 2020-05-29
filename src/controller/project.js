@@ -12,45 +12,44 @@ const BidHistory = require('../models/bid_model');
 
 exports.browse_projects = async (req, res) => {
   try {
-    var match = {};
-
-    match.location = [];
-    match.licence = [];
-
-    var locationArray = [];
-    var licenceArray = [];
-    var i = null;
-
-    // eslint-disable-next-line no-shadow
-    await req.engnr.profession.forEach(i => {
-      locationArray.push(i.location);
-      licenceArray.push(i.licence);
-    });
+    var match = [];
 
     if (req.query.location || req.query.licence) {
       if (req.query.location && !req.query.licence) {
-        i = locationArray.indexOf(req.query.location);
+        req.engnr.profession = req.engnr.profession.filter(e => {
+          return e.location === req.query.location;
+        });
 
-        match.status = 'open';
-        match.location[0] = req.query.location;
-        match.licence[0] = licenceArray[i];
+        req.engnr.profession.forEach(e => {
+          match.push({
+            status: 'open',
+            location: e.location,
+            licenseType: e.licence
+          });
+        });
       } else if (req.query.licence && !req.query.location) {
-        i = licenceArray.indexOf(req.query.licence);
+        req.engnr.profession = req.engnr.profession.filter(e => {
+          return e.licence === req.query.licence;
+        });
 
-        match.status = 'open';
-        match.location[0] = locationArray[i];
-        match.licence[0] = req.query.licence;
+        req.engnr.profession.forEach(e => {
+          match.push({
+            status: 'open',
+            location: e.location,
+            licenseType: e.licence
+          });
+        });
       } else {
-        match.status = 'open';
-        match.location[0] = req.query.location;
-        match.licence[0] = req.query.licence;
+        match.push({
+          status: 'open',
+          location: req.query.location,
+          licenseType: req.query.licence
+        });
       }
     } else {
-      for (i = 0; i < locationArray.length; i++) {
-        match.status = 'open';
-        match.location[i] = locationArray[i];
-        match.licence[i] = licenceArray[i];
-      }
+      req.engnr.profession.forEach(e => {
+        match.push({ location: e.location, licenseType: e.licence });
+      });
     }
 
     const project = await BidHistory.aggregate([
@@ -69,13 +68,11 @@ exports.browse_projects = async (req, res) => {
       },
       {
         $match: {
-          $and: [
-            {
-              'project.status': match.status,
-              'project.location': { $in: match.location },
-              'project.licenseType': { $in: match.licence }
+          project: {
+            $elemMatch: {
+              $or: match
             }
-          ]
+          }
         }
       },
       {

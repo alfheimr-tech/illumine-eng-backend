@@ -12,7 +12,6 @@ const auth = async function(req, res, next) {
     }).orFail(new Error('no user found'));
 
     req.engnr = engnr;
-    req.profession = req.engnr.profession;
     req.token = token;
 
     next();
