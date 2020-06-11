@@ -26,7 +26,6 @@ const engineerSchema = new mongoose.Schema({
   password: {
     type: String,
     minlength: 8,
-    required: true,
     trim: true
   },
 
@@ -47,11 +46,13 @@ const engineerSchema = new mongoose.Schema({
   profession: [
     {
       location: {
-        type: String
+        type: String,
+        trim: true
       },
 
       licence: {
-        type: String
+        type: String,
+        trim: true
       }
     }
   ],

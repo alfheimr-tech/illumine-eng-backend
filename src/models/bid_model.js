@@ -36,6 +36,11 @@ const bidSchema = new mongoose.Schema({
       active: {
         type: Boolean,
         default: true
+      },
+
+      engineerAction: {
+        type: Boolean,
+        default: false
       }
     }
   ]

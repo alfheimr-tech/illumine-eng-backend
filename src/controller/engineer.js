@@ -20,8 +20,6 @@ exports.create_engineer_account = async (req, res) => {
       );
     }
 
-    const token = await engnr.generateAuthToken();
-
     await engnr.save();
 
     res.status(201).send({ message: 'created successfully', token });
@@ -150,9 +148,11 @@ exports.engineer_emailverify = async (req, res) => {
 
     engnr.emailVerify = true;
 
+    const token = await engnr.generateAuthToken();
+
     await engnr.save();
 
-    res.status(202).send({ message: 'email verified' });
+    res.status(202).send({ message: 'email verified', token });
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
