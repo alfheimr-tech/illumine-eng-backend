@@ -1,3 +1,5 @@
+/* eslint-disable vars-on-top */
+/* eslint-disable no-var */
 const mongoose = require('mongoose');
 const Project = require('../models/project_model');
 const Client = require('../models/client_model');
@@ -7,12 +9,11 @@ const FAQ = require('../models/faq_model');
 
 exports.project_card = async (req, res) => {
   try {
+    var faq;
+
     const project = await Project.findById({ _id: req.params.id }).orFail(
       new Error('no project found')
     );
-
-    // eslint-disable-next-line vars-on-top
-    var faq;
 
     const client = await Client.findById({
       _id: mongoose.Types.ObjectId(project.clientID)
