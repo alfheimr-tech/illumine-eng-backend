@@ -48,7 +48,11 @@ exports.browse_projects = async (req, res) => {
       }
     } else {
       req.engnr.profession.forEach(e => {
-        match.push({ location: e.location, licenseType: e.licence });
+        match.push({
+          status: 'open',
+          location: e.location,
+          licenseType: e.licence
+        });
       });
     }
 
@@ -95,35 +99,24 @@ exports.browse_projects = async (req, res) => {
 
 exports.engineers_projectbid = async (req, res) => {
   try {
-    const isValid = await BidHistory.find({
-      projectID: req.params.id,
-      bids: {
-        $elemMatch: { engineerID: req.engnr.id }
-      }
+    const bid_project = await BidHistory.findOne({
+      projectID: req.params.id
     });
 
-    if (isValid.length !== 0) {
-      throw new Error(
-        'You have already placed a bid on this project! Bid can be placed only once on each project'
-      );
-    } else {
-      const bid_project = await BidHistory.findOne({
-        projectID: req.params.id
-      });
+    // total bids update
 
-      bid_project.bids.push({
-        ...req.body.bids,
-        engineerID: req.engnr.id
-      });
+    bid_project.bids.push({
+      ...req.body.bids,
+      engineerID: req.engnr.id
+    });
 
-      await bid_project.save();
-      res.status(200).send({ message: 'bid submitted' });
-    }
+    await bid_project.save();
+
+    res.status(200).send({ message: 'bid submitted' });
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
 };
-
 // ENGINEER VIEWS ALL ACTIVE PROJECTS
 
 exports.active_projects = async (req, res) => {
@@ -203,9 +196,7 @@ exports.active_projects = async (req, res) => {
       );
     }
 
-    const project = await Project.find(match).orFail(
-      new Error('could not find any active project')
-    );
+    const project = await Project.find(match);
 
     res.status(200).send(project);
   } catch (error) {
@@ -262,15 +253,16 @@ exports.active_bids = async (req, res) => {
               in: {
                 name: '$$pro.projectName',
                 licence: '$$pro.licenseType',
-                location: '$$pro.location'
+                location: '$$pro.location',
+                staus: '$$pro.status',
+                duration: '$$pro.duration',
+                description: '$$pro.description'
               }
             }
           }
         }
       }
     ]);
-
-    if (activebid.length === 0) throw new Error('no data present');
 
     res.status(200).send({ message: 'sent', activebid });
   } catch (error) {
@@ -285,7 +277,7 @@ exports.completed_projects = async (req, res) => {
     const project = await Project.find({
       status: 'completed',
       engineerID: req.engnr.id
-    }).orFail(new Error('No completed projects'));
+    });
 
     res.status(200).send({ project });
   } catch (error) {
@@ -297,31 +289,24 @@ exports.completed_projects = async (req, res) => {
 
 exports.engineer_rebids = async (req, res) => {
   try {
-    const check_rebid = await BidHistory.findOne({
-      projectID: req.params.id,
-      bids: {
-        $elemMatch: { engineerID: req.engnr.id, rebid: false }
-      }
-    });
-
-    if (check_rebid) {
-      throw new Error('You can place a rebid only once on each project');
-    }
-
-    await BidHistory.updateOne(
+    const bid = await BidHistory.findOneAndUpdate(
       {
         projectID: req.params.id,
         bids: { $elemMatch: { engineerID: req.engnr.id, active: true } }
       },
       {
         $set: {
-          'bids.$.rebid': false,
+          'bids.$.engineerAction': true,
+          'bids.$.splitUp': req.body.bids.splitUp,
           'bids.$.bidAmount': req.body.bids.bidAmount
         }
+      },
+      {
+        new: true
       }
     );
 
-    res.status(202).send({ message: 'updated' });
+    res.status(202).send({ message: 'updated', bid });
   } catch (error) {
     res.status(400).send({ error: error.message });
   }

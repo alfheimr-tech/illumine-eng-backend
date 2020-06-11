@@ -1,4 +1,6 @@
+const mongoose = require('mongoose');
 const Project = require('../models/project_model');
+const Client = require('../models/client_model');
 const FAQ = require('../models/faq_model');
 
 // ENGINEER VIEWS PROJECT CARD
@@ -11,7 +13,10 @@ exports.project_card = async (req, res) => {
 
     // eslint-disable-next-line vars-on-top
     var faq;
-    // var project_documents;
+
+    const client = await Client.findById({
+      _id: mongoose.Types.ObjectId(project.clientID)
+    });
 
     // // GET THE DOCUMENTS
     // if (req.query.signed) {
@@ -32,7 +37,12 @@ exports.project_card = async (req, res) => {
       faq = await FAQ.getFAQS(project.id, true);
     }
 
-    res.status(200).send({ project, faq });
+    res.status(200).send({
+      project,
+      faq,
+      clientName: client.username,
+      clientAvatar: client.avatar
+    });
   } catch (error) {
     res.status(400).send({ error: error.message });
   }

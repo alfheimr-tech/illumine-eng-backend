@@ -46,11 +46,13 @@ const engineerSchema = new mongoose.Schema({
   profession: [
     {
       location: {
-        type: String
+        type: String,
+        trim: true
       },
 
       licence: {
-        type: String
+        type: String,
+        trim: true
       }
     }
   ],

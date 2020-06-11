@@ -10,7 +10,7 @@ const sendWelcomeEmail = (email, token) => {
     text:
       'welcome to illumine industries where PE meets clients. \n' +
       'please click on the below link to verify your mail. \n' +
-      `http://localhost:3000/api/engineer/confirm_mail/${token}`
+      `http://localhost:4200/engineer/register/${token}`
   });
 };
 
