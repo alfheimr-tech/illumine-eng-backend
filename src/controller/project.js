@@ -244,6 +244,7 @@ exports.active_bids = async (req, res) => {
       },
       {
         $project: {
+          projectID: 1,
           bids: 1,
           totalbids_received: 1,
           project: {
