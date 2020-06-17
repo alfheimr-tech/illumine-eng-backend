@@ -1,6 +1,7 @@
 /* eslint-disable dot-notation */
 const crypto = require('crypto');
 const sharp = require('sharp');
+const AWS = require('aws-sdk');
 const Engineer = require('../models/engineer_model');
 const Bank = require('../models/bank_model');
 const Engineer_Docs = require('../models/document_model');
@@ -32,55 +33,47 @@ exports.create_engineer_account = async (req, res) => {
 
 exports.create_engineer_profile = async (req, res) => {
   try {
+    console.log(req.body);
     // ENGINEERS PERSONAL DETAIL
-
-    req.engnr.username = req.body.username;
-
-    const buffer = await sharp(req.file.buffer)
-      .resize({ width: 250, height: 250 })
-      .png()
-      .toBuffer();
-    req.engnr.avatar = buffer;
-
-    req.engnr.phone = req.body.phone;
-
-    for (let i = 0; i < req.body.location.length; i++) {
-      req.engnr.profession.push({
-        location: req.body.location[i],
-        licence: req.body.licence[i]
-      });
-    }
-
+    // req.engnr.username = req.body.username;
+    // const buffer = await sharp(req.file.buffer)
+    //   .resize({ width: 250, height: 250 })
+    //   .png()
+    //   .toBuffer();
+    // req.engnr.avatar = buffer;
+    // req.engnr.phone = req.body.phone;
+    // for (let i = 0; i < req.body.location.length; i++) {
+    //   req.engnr.profession.push({
+    //     location: req.body.location[i],
+    //     licence: req.body.licence[i]
+    //   });
+    // }
     // HAVE TO STORE DOCUMENTS
-
-    // const docs = new Engineer_Docs();
-
-    // docs.engineerID = req.engnr._id;
-
-    // for (let i = 0; i < req.files['copyofinsurance'].length; i++) {
-    //   docs.copy_of_insurance[i] = req.files['copyofinsurance'][i].buffer;
-    // }
-
-    // for (let i = 0; i < req.files['portalagreement'].length; i++) {
-    //   docs.portal_agreement[i] = req.files['portalagreement'][i].buffer;
-    // }
-
+    // const s3 = new AWS.S3({
+    //   accessKeyId: process.env.ACCESS_KEY_ID,
+    //   secretAccessKey: process.env.SECRET_ACCESS_KEY
+    // });
+    // const key = `${req.engnr._id}.jpeg`;
+    // s3.getSignedUrl(
+    //   'putObject',
+    //   {
+    //     Bucket: 'sushu-bucket',
+    //     ContentType: 'image/jpeg',
+    //     Key: key
+    //   },
+    //   (err, url) => res.send({ key, url })
+    // );
     // await docs.save();
-
     // STORING BANK DETAILS OF PE
-
-    const bank = new Bank({
-      engineerID: req.engnr._id,
-      bankName: req.body.bankName,
-      accountNumber: req.body.accountNumber,
-      ABA: req.body.ABA
-    });
-
-    await bank.save();
-
-    await req.engnr.save();
-
-    res.status(201).send({ message: 'profile has been created' });
+    // const bank = new Bank({
+    //   engineerID: req.engnr._id,
+    //   bankName: req.body.bankName,
+    //   accountNumber: req.body.accountNumber,
+    //   ABA: req.body.ABA
+    // });
+    // await bank.save();
+    // await req.engnr.save();
+    // res.status(201).send({ message: 'profile has been created' });
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
