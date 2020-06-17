@@ -23,7 +23,7 @@ exports.create_engineer_account = async (req, res) => {
 
     await engnr.save();
 
-    res.status(201).send({ message: 'created successfully', token });
+    res.status(201).send({ message: 'created successfully' });
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
