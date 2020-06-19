@@ -65,7 +65,7 @@ exports.create_engineer_profile = async (req, res) => {
     const key = `${req.engnr.id}/${++j}.jpeg`;
 
     const getUrl = async () => {
-      return s3.getSignedUrl('putObject', {
+      return await s3.getSignedUrl('putObject', {
         Bucket: 'sushu-bucket',
         Key: key,
         ContentType: 'image/jpeg'
