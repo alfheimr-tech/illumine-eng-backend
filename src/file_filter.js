@@ -1,4 +1,5 @@
 const multer = require('multer');
+const AWS = require('aws-sdk');
 
 exports.upload_pic = multer({
   limits: {
@@ -13,3 +14,12 @@ exports.upload_pic = multer({
     callback(undefined, true);
   }
 });
+
+exports.upload_docs = () => {
+  const s3 = new AWS.S3({
+    accessKeyId: process.env.ACCESS_KEY_ID,
+    secretAccessKey: process.env.SECRET_ACCESS_KEY
+  });
+
+  return s3;
+};

@@ -1,7 +1,7 @@
 /* eslint-disable dot-notation */
 const crypto = require('crypto');
 const sharp = require('sharp');
-const AWS = require('aws-sdk');
+const { upload_docs } = require('../file_filter');
 const Engineer = require('../models/engineer_model');
 const Bank = require('../models/bank_model');
 const Engineer_Docs = require('../models/document_model');
@@ -33,47 +33,71 @@ exports.create_engineer_account = async (req, res) => {
 
 exports.create_engineer_profile = async (req, res) => {
   try {
+    let j = 0;
+
+    // const fileDetail = {};
+
     console.log(req.body);
+
     // ENGINEERS PERSONAL DETAIL
+
     // req.engnr.username = req.body.username;
+
     // const buffer = await sharp(req.file.buffer)
     //   .resize({ width: 250, height: 250 })
     //   .png()
     //   .toBuffer();
     // req.engnr.avatar = buffer;
+
     // req.engnr.phone = req.body.phone;
+
     // for (let i = 0; i < req.body.location.length; i++) {
     //   req.engnr.profession.push({
     //     location: req.body.location[i],
     //     licence: req.body.licence[i]
     //   });
     // }
+
     // HAVE TO STORE DOCUMENTS
-    // const s3 = new AWS.S3({
-    //   accessKeyId: process.env.ACCESS_KEY_ID,
-    //   secretAccessKey: process.env.SECRET_ACCESS_KEY
-    // });
-    // const key = `${req.engnr._id}.jpeg`;
-    // s3.getSignedUrl(
-    //   'putObject',
-    //   {
-    //     Bucket: 'sushu-bucket',
-    //     ContentType: 'image/jpeg',
-    //     Key: key
-    //   },
-    //   (err, url) => res.send({ key, url })
-    // );
-    // await docs.save();
+
+    const s3 = upload_docs();
+
+    const key = `${req.engnr.id}/${++j}.jpeg`;
+
+    const getUrl = async () => {
+      return s3.getSignedUrl('putObject', {
+        Bucket: 'sushu-bucket',
+        Key: key,
+        ContentType: 'image/jpeg'
+      });
+    };
+
+    const url = getUrl();
+
+    // eslint-disable-next-line no-restricted-syntax
+    // for (fileDetail of req.body.fileDetails) {
+
+    // eslint-disable-next-line no-await-in-loop
+    // const preSignedUrl = await getUrl(key);
+    // fileDetail.url = preSignedUrl;
+    // fileDetail.key = key;
+    // fileDetail.docType = 'engineer';
+    // }
+
     // STORING BANK DETAILS OF PE
+
     // const bank = new Bank({
     //   engineerID: req.engnr._id,
     //   bankName: req.body.bankName,
     //   accountNumber: req.body.accountNumber,
     //   ABA: req.body.ABA
     // });
+
     // await bank.save();
+
     // await req.engnr.save();
-    // res.status(201).send({ message: 'profile has been created' });
+
+    res.status(201).send({ message: 'profile has been created', url });
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
