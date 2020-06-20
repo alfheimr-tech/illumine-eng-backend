@@ -8,20 +8,27 @@ const Engineer_Docs = require('../models/document_model');
 const Notifications = require('../models/notifications_model');
 const { sendForgotPassword } = require('../email/account');
 
+var documents = [];
+
 // ENGINEER CREATES ACCOUNT
 
 exports.create_engineer_account = async (req, res) => {
   try {
-    const engnr = new Engineer(req.body);
-
-    const user_check = await Engineer.findOne({ email: engnr.email });
-    if (user_check) {
+    const engnr_check = await Engineer.findOne({ email: req.body.email });
+    if (engnr_check) {
       throw new Error(
         'This email id has already been registered! Please use an unregistered email id'
       );
     }
+    const engnr = new Engineer(req.body);
 
     await engnr.save();
+
+    const engnr_docs = new Engineer_Docs({
+      engineerID: engnr.id
+    });
+
+    await engnr_docs.save();
 
     res.status(201).send({ message: 'created successfully' });
   } catch (error) {
@@ -34,10 +41,6 @@ exports.create_engineer_account = async (req, res) => {
 exports.create_engineer_profile = async (req, res) => {
   try {
     let j = 0;
-
-    // const fileDetail = {};
-
-    console.log(req.body);
 
     // ENGINEERS PERSONAL DETAIL
 
@@ -62,27 +65,25 @@ exports.create_engineer_profile = async (req, res) => {
 
     const s3 = upload_docs();
 
-    const key = `${req.engnr.id}/${++j}.jpeg`;
-
-    const getUrl = async () => {
-      return await s3.getSignedUrl('putObject', {
+    const getUrl = async (fileDetail, key) => {
+      return s3.getSignedUrl('putObject', {
         Bucket: 'sushu-bucket',
         Key: key,
-        ContentType: 'image/jpeg'
+        ContentType: fileDetail.fileType
       });
     };
 
-    const url = getUrl();
-
     // eslint-disable-next-line no-restricted-syntax
-    // for (fileDetail of req.body.fileDetails) {
-
-    // eslint-disable-next-line no-await-in-loop
-    // const preSignedUrl = await getUrl(key);
-    // fileDetail.url = preSignedUrl;
-    // fileDetail.key = key;
-    // fileDetail.docType = 'engineer';
-    // }
+    for (const fileDetail of req.body.fileDetails) {
+      const key = `${req.engnr.id}/${++j}.${fileDetail.extension}`;
+      // eslint-disable-next-line no-await-in-loop
+      const preSignedUrl = await getUrl(fileDetail, key);
+      documents.push({
+        url: preSignedUrl,
+        key,
+        extension: fileDetail.extension
+      });
+    }
 
     // STORING BANK DETAILS OF PE
 
@@ -97,9 +98,30 @@ exports.create_engineer_profile = async (req, res) => {
 
     // await req.engnr.save();
 
-    res.status(201).send({ message: 'profile has been created', url });
+    res.status(201).send({ message: 'profile has been created', documents });
   } catch (error) {
     res.status(400).send({ error: error.message });
+  }
+};
+
+// STORING DOCS URL
+exports.upload_engnr_docs = async (req, res) => {
+  try {
+    if (req.body === null) {
+      const engnr_docs = await Engineer_Docs.findOne({
+        engineerID: req.engnr.id
+      });
+
+      engnr_docs.docs.push(...documents);
+
+      await engnr_docs.save();
+
+      documents = [];
+
+      res.status(200).send(null);
+    }
+  } catch (error) {
+    res.status(400).send({ error: 'Fail' });
   }
 };
 

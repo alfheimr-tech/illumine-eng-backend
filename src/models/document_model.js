@@ -3,18 +3,25 @@ const mongoose = require('mongoose');
 const documentSchema = new mongoose.Schema({
   engineerID: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true
+    trim: true
   },
 
-  copy_of_insurance: [
+  docs: [
     {
-      type: Buffer
-    }
-  ],
+      Key: {
+        type: String,
+        trim: true
+      },
 
-  portal_agreement: [
-    {
-      type: Buffer
+      extension: {
+        type: String,
+        trim: true
+      },
+
+      url: {
+        type: String,
+        trim: true
+      }
     }
   ]
 });
@@ -22,7 +29,7 @@ const documentSchema = new mongoose.Schema({
 const Engineer_Docs = mongoose.model(
   'Engineer_Docs',
   documentSchema,
-  'engineer_documents'
+  'engnr_docs'
 );
 
 module.exports = Engineer_Docs;
