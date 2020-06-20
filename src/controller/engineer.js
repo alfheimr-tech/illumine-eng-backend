@@ -42,6 +42,8 @@ exports.create_engineer_profile = async (req, res) => {
   try {
     let j = 0;
 
+    console.log(req.body);
+
     // ENGINEERS PERSONAL DETAIL
 
     // req.engnr.username = req.body.username;
@@ -78,6 +80,7 @@ exports.create_engineer_profile = async (req, res) => {
       const key = `${req.engnr.id}/${++j}.${fileDetail.extension}`;
       // eslint-disable-next-line no-await-in-loop
       const preSignedUrl = await getUrl(fileDetail, key);
+      console.log(preSignedUrl);
       documents.push({
         url: preSignedUrl,
         key,
