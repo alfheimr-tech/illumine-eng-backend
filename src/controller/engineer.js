@@ -71,18 +71,16 @@ exports.create_engineer_profile = async (req, res) => {
       return s3.getSignedUrl('putObject', {
         Bucket: 'sushu-bucket',
         Key: key,
-        ContentType: 'image/jpeg'
+        ContentType: fileDetail.fileType
       });
     };
 
     // eslint-disable-next-line no-restricted-syntax
     for (const fileDetail of req.body.fileDetails) {
       const key = `${req.engnr.id}/${++j}.${fileDetail.extension}`;
-      // eslint-disable-next-line no-await-in-loop
-      const preSignedUrl = await getUrl(fileDetail, key);
-      console.log(preSignedUrl);
       documents.push({
-        url: preSignedUrl,
+        // eslint-disable-next-line no-await-in-loop
+        url: await getUrl(fileDetail, key),
         key,
         extension: fileDetail.extension
       });
