@@ -71,7 +71,7 @@ exports.create_engineer_profile = async (req, res) => {
       return s3.getSignedUrl('putObject', {
         Bucket: 'sushu-bucket',
         Key: key,
-        ContentType: fileDetail.fileType
+        ContentType: 'image/jpeg'
       });
     };
 
