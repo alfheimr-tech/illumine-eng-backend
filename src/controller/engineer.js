@@ -42,11 +42,11 @@ exports.create_engineer_profile = async (req, res) => {
   try {
     let j = 0;
 
-    console.log(req.body);
-
     // ENGINEERS PERSONAL DETAIL
 
     // req.engnr.username = req.body.username;
+
+    req.engnr.password = req.body.password;
 
     // const buffer = await sharp(req.file.buffer)
     //   .resize({ width: 250, height: 250 })
@@ -65,26 +65,26 @@ exports.create_engineer_profile = async (req, res) => {
 
     // HAVE TO STORE DOCUMENTS
 
-    const s3 = upload_docs();
+    // const s3 = upload_docs();
 
-    const getUrl = async (fileDetail, key) => {
-      return s3.getSignedUrl('putObject', {
-        Bucket: 'sushu-bucket',
-        Key: key,
-        ContentType: fileDetail.fileType
-      });
-    };
+    // const getUrl = async (fileDetail, key) => {
+    //   return s3.getSignedUrl('putObject', {
+    //     Bucket: 'sushu-bucket',
+    //     Key: key,
+    //     ContentType: fileDetail.fileType
+    //   });
+    // };
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (const fileDetail of req.body.fileDetails) {
-      const key = `${req.engnr.id}/${++j}.${fileDetail.extension}`;
-      documents.push({
-        // eslint-disable-next-line no-await-in-loop
-        url: await getUrl(fileDetail, key),
-        key,
-        extension: fileDetail.extension
-      });
-    }
+    // // eslint-disable-next-line no-restricted-syntax
+    // for (const fileDetail of req.body.fileDetails) {
+    //   const key = `${req.engnr.id}/${++j}.${fileDetail.extension}`;
+    //   documents.push({
+    //     // eslint-disable-next-line no-await-in-loop
+    //     url: await getUrl(fileDetail, key),
+    //     key,
+    //     extension: fileDetail.extension
+    //   });
+    // }
 
     // STORING BANK DETAILS OF PE
 
@@ -97,9 +97,9 @@ exports.create_engineer_profile = async (req, res) => {
 
     // await bank.save();
 
-    // await req.engnr.save();
+    await req.engnr.save();
 
-    res.status(201).send({ message: 'profile has been created', documents });
+    res.status(201).send({ message: 'profile has been created' });
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
