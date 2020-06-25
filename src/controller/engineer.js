@@ -40,7 +40,7 @@ exports.create_engineer_account = async (req, res) => {
 
 exports.create_engineer_profile = async (req, res) => {
   try {
-    let j = 0;
+    // let j = 0;
 
     // ENGINEERS PERSONAL DETAIL
 
