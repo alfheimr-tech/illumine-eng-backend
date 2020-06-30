@@ -12,11 +12,11 @@ Router.route('/signup').post(engnrController.create_engineer_account);
 Router.route('/profile')
   .post(
     auth,
-    // upload_pic.single('avatar'),
-    engnrController.create_engineer_profile
-    // (error, req, res, next) => {
-    //   res.status(400).send({ error: error.message });
-    // }
+    upload_pic.single('avatar'),
+    engnrController.create_engineer_profile,
+    (error, req, res, next) => {
+      res.status(400).send({ error: error.message });
+    }
   )
   .put(auth, engnrController.upload_engnr_docs);
 
