@@ -2,6 +2,7 @@
 /* eslint-disable no-var */
 const mongoose = require('mongoose');
 const Project = require('../models/project_model');
+const Project_Docs = require('../models/projectDocs_model');
 const Client = require('../models/client_model');
 const FAQ = require('../models/faq_model');
 
@@ -19,16 +20,10 @@ exports.project_card = async (req, res) => {
       _id: mongoose.Types.ObjectId(project.clientID)
     });
 
-    // // GET THE DOCUMENTS
-    // if (req.query.signed) {
-    //   project_documents = await Documents.find({ signed: true })
-    //     .where('projectID')
-    //     .equals(project._id);
-    // } else {
-    //   project_documents = await Documents.find({ signed: true })
-    //     .where('projectID')
-    //     .equals(project._id);
-    // }
+    // GET THE DOCUMENTS
+    const project_docs = await Project_Docs.findOne({
+      projectID: req.params.id
+    });
 
     // GET THE FAQ
 
@@ -41,6 +36,7 @@ exports.project_card = async (req, res) => {
     res.status(200).send({
       project,
       faq,
+      project_docs,
       clientName: client.username,
       clientAvatar: client.avatar
     });
