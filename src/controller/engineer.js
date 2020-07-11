@@ -44,24 +44,24 @@ exports.create_engineer_profile = async (req, res) => {
 
     // ENGINEERS PERSONAL DETAIL
 
-    req.engnr.username = req.body.username;
+    // req.engnr.username = req.body.username;
 
-    req.engnr.password = req.body.password;
+    // req.engnr.password = req.body.password;
 
-    const buffer = await sharp(req.file.buffer)
-      .resize({ width: 250, height: 250 })
-      .png()
-      .toBuffer();
-    req.engnr.avatar = buffer;
+    // const buffer = await sharp(req.file.buffer)
+    //   .resize({ width: 250, height: 250 })
+    //   .png()
+    //   .toBuffer();
+    // req.engnr.avatar = buffer;
 
-    req.engnr.phone = req.body.phone;
+    // req.engnr.phone = req.body.phone;
 
-    for (let i = 0; i < req.body.location.length; i++) {
-      req.engnr.profession.push({
-        location: req.body.location[i],
-        licence: req.body.licence[i]
-      });
-    }
+    // for (let i = 0; i < req.body.location.length; i++) {
+    //   req.engnr.profession.push({
+    //     location: req.body.location[i],
+    //     licence: req.body.licence[i]
+    //   });
+    // }
 
     // HAVE TO STORE DOCUMENTS
 
@@ -88,14 +88,14 @@ exports.create_engineer_profile = async (req, res) => {
 
     // STORING BANK DETAILS OF PE
 
-    const bank = new Bank({
-      engineerID: req.engnr._id,
-      bankName: req.body.bankName,
-      accountNumber: req.body.accountNumber,
-      ABA: req.body.ABA
-    });
+    // const bank = new Bank({
+    //   engineerID: req.engnr._id,
+    //   bankName: req.body.bankName,
+    //   accountNumber: req.body.accountNumber,
+    //   ABA: req.body.ABA
+    // });
 
-    await bank.save();
+    // await bank.save();
 
     await req.engnr.save();
 
