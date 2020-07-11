@@ -18,6 +18,11 @@ const documentSchema = new mongoose.Schema({
         trim: true
       },
 
+      docType: {
+        type: String,
+        trim: true
+      },
+
       url: {
         type: String,
         trim: true
