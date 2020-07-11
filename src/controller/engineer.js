@@ -82,6 +82,7 @@ exports.create_engineer_profile = async (req, res) => {
         // eslint-disable-next-line no-await-in-loop
         url: await getUrl(fileDetail, key),
         key,
+        fileType: fileDetail.fileType,
         extension: fileDetail.extension
       });
     }
