@@ -119,7 +119,7 @@ exports.upload_engnr_docs = async (req, res) => {
 
       documents = [];
 
-      res.status(200).send(null);
+      res.status(200).send('documents saved');
     }
   } catch (error) {
     res.status(400).send({ error: 'Fail' });
