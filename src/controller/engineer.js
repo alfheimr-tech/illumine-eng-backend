@@ -77,7 +77,7 @@ exports.create_engineer_profile = async (req, res) => {
 
     // eslint-disable-next-line no-restricted-syntax
     for (const fileDetail of req.body.fileDetails) {
-      const key = `${req.engnr.id}/${++j}.${fileDetail.extension}`;
+      const key = `${req.engnr.id}-${++j}.${fileDetail.extension}`;
       documents.push({
         // eslint-disable-next-line no-await-in-loop
         url: await getUrl(fileDetail, key),
