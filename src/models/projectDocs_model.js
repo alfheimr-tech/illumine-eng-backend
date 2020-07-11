@@ -8,7 +8,7 @@ const projectdocsSchema = new mongoose.Schema({
 
   docs: [
     {
-      Key: {
+      key: {
         type: String,
         trim: true
       },

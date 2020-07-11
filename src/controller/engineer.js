@@ -117,7 +117,7 @@ exports.upload_engnr_docs = async (req, res) => {
       engineerID: req.engnr.id
     });
 
-    engnr_docs.docs.push(...req.body.value);
+    engnr_docs.docs.push(...req.body);
 
     await engnr_docs.save();
 
