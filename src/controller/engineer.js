@@ -100,6 +100,8 @@ exports.create_engineer_profile = async (req, res) => {
 
     await req.engnr.save();
 
+    documents = [];
+
     res.status(201).send({ message: 'profile has been created', documents });
   } catch (error) {
     res.status(400).send({ error: error.message });
@@ -109,26 +111,17 @@ exports.create_engineer_profile = async (req, res) => {
 // STORING DOCS URL
 exports.upload_engnr_docs = async (req, res) => {
   try {
-    if (req.body === null) {
-      console.log(documents[0]);
-      console.log(req.body);
+    console.log(req.body);
 
-      const engnr_docs = await Engineer_Docs.findOne({
-        engineerID: req.engnr.id
-      });
+    const engnr_docs = await Engineer_Docs.findOne({
+      engineerID: req.engnr.id
+    });
 
-      for (let i = 0; i < documents.length; i++) {
-        engnr_docs.docs.push(...documents[i]);
-      }
+    engnr_docs.docs.push(...req.body.value);
 
-      await engnr_docs.save();
+    await engnr_docs.save();
 
-      res.status(200).send('documents saved');
-    }
-
-    documents = [];
-
-    throw new Error();
+    res.send('successful');
   } catch (error) {
     res.status(400).send({ error: 'Fail' });
   }
