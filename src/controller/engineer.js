@@ -110,18 +110,25 @@ exports.create_engineer_profile = async (req, res) => {
 exports.upload_engnr_docs = async (req, res) => {
   try {
     if (req.body === null) {
+      console.log(documents[0]);
+      console.log(req.body);
+
       const engnr_docs = await Engineer_Docs.findOne({
         engineerID: req.engnr.id
       });
 
-      engnr_docs.docs.push(...documents);
+      for (let i = 0; i < documents.length; i++) {
+        engnr_docs.docs.push(...documents[i]);
+      }
 
       await engnr_docs.save();
 
-      documents = [];
-
       res.status(200).send('documents saved');
     }
+
+    documents = [];
+
+    throw new Error();
   } catch (error) {
     res.status(400).send({ error: 'Fail' });
   }
