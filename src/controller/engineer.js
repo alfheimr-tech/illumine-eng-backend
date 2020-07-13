@@ -63,7 +63,7 @@ exports.create_engineer_profile = async (req, res) => {
 
     req.engnr.phone = req.body.phone;
 
-    console.log('2');
+    // console.log('2');
 
     for (let i = 0; i < req.body.location.length; i++) {
       req.engnr.profession.push({
@@ -72,7 +72,6 @@ exports.create_engineer_profile = async (req, res) => {
       });
     }
 
-    console.log('3');
     // HAVE TO STORE DOCUMENTS
 
     const s3 = upload_docs();
@@ -99,7 +98,7 @@ exports.create_engineer_profile = async (req, res) => {
 
     console.log('4');
 
-    // STORING BANK DETAILS OF PE
+    // // STORING BANK DETAILS OF PE
 
     const bank = new Bank({
       engineerID: req.engnr._id,
