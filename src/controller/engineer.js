@@ -48,11 +48,13 @@ exports.create_engineer_profile = async (req, res) => {
 
     req.engnr.password = req.body.password;
 
-    const buffer = await sharp(req.file.buffer)
-      .resize({ width: 250, height: 250 })
-      .png()
-      .toBuffer();
-    req.engnr.avatar = buffer;
+    if (req.file) {
+      const buffer = await sharp(req.file.buffer)
+        .resize({ width: 250, height: 250 })
+        .png()
+        .toBuffer();
+      req.engnr.avatar = buffer;
+    }
 
     req.engnr.phone = req.body.phone;
 
