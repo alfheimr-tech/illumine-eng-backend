@@ -42,6 +42,8 @@ exports.create_engineer_profile = async (req, res) => {
   try {
     let j = 0;
 
+    console.log(req.body);
+
     // ENGINEERS PERSONAL DETAIL
 
     req.engnr.username = req.body.username;
@@ -105,6 +107,8 @@ exports.create_engineer_profile = async (req, res) => {
     res.status(201).send({ message: 'profile has been created', documents });
 
     documents = [];
+
+    console.log(documents);
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
@@ -113,6 +117,8 @@ exports.create_engineer_profile = async (req, res) => {
 // STORING DOCS URL
 exports.upload_engnr_docs = async (req, res) => {
   try {
+    console.log('in');
+
     const engnr_docs = await Engineer_Docs.findOne({
       engineerID: req.engnr.id
     });
