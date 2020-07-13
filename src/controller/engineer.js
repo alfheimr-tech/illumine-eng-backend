@@ -50,7 +50,10 @@ exports.create_engineer_profile = async (req, res) => {
 
     req.engnr.password = req.body.password;
 
+    console.log('1');
+
     if (req.file) {
+      console.log('file');
       const buffer = await sharp(req.file.buffer)
         .resize({ width: 250, height: 250 })
         .png()
@@ -60,6 +63,8 @@ exports.create_engineer_profile = async (req, res) => {
 
     req.engnr.phone = req.body.phone;
 
+    console.log('2');
+
     for (let i = 0; i < req.body.location.length; i++) {
       req.engnr.profession.push({
         location: req.body.location[i],
@@ -67,6 +72,7 @@ exports.create_engineer_profile = async (req, res) => {
       });
     }
 
+    console.log('3');
     // HAVE TO STORE DOCUMENTS
 
     const s3 = upload_docs();
@@ -90,6 +96,8 @@ exports.create_engineer_profile = async (req, res) => {
         extension: fileDetail.extension
       });
     }
+
+    console.log('4');
 
     // STORING BANK DETAILS OF PE
 
