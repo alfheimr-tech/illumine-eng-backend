@@ -1,6 +1,7 @@
 /* eslint-disable dot-notation */
 const crypto = require('crypto');
 const sharp = require('sharp');
+const { uuid } = require('uuidv4');
 const { upload_docs } = require('../file_filter');
 const Engineer = require('../models/engineer_model');
 const Bank = require('../models/bank_model');
@@ -40,20 +41,13 @@ exports.create_engineer_account = async (req, res) => {
 
 exports.create_engineer_profile = async (req, res) => {
   try {
-    let j = 0;
-
-    console.log(req.body);
-
     // ENGINEERS PERSONAL DETAIL
 
     req.engnr.username = req.body.username;
 
     req.engnr.password = req.body.password;
 
-    console.log('1');
-
     if (req.file) {
-      console.log('file');
       const buffer = await sharp(req.file.buffer)
         .resize({ width: 250, height: 250 })
         .png()
@@ -62,8 +56,6 @@ exports.create_engineer_profile = async (req, res) => {
     }
 
     req.engnr.phone = req.body.phone;
-
-    // console.log('2');
 
     for (let i = 0; i < req.body.location.length; i++) {
       req.engnr.profession.push({
@@ -86,7 +78,7 @@ exports.create_engineer_profile = async (req, res) => {
 
     // eslint-disable-next-line no-restricted-syntax
     for (const fileDetail of req.body.fileDetails) {
-      const key = `${req.engnr.id}-${++j}.${fileDetail.extension}`;
+      const key = `${req.engnr.id}/${uuid()}.${fileDetail.extension}`;
       documents.push({
         // eslint-disable-next-line no-await-in-loop
         url: await getUrl(fileDetail, key),
@@ -95,8 +87,6 @@ exports.create_engineer_profile = async (req, res) => {
         extension: fileDetail.extension
       });
     }
-
-    console.log('4');
 
     // // STORING BANK DETAILS OF PE
 
@@ -114,8 +104,6 @@ exports.create_engineer_profile = async (req, res) => {
     res.status(201).send({ message: 'profile has been created', documents });
 
     documents = [];
-
-    console.log(documents);
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
