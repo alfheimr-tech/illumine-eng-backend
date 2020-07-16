@@ -2,7 +2,7 @@
 const crypto = require('crypto');
 const sharp = require('sharp');
 const { uuid } = require('uuidv4');
-const { upload_docs } = require('../file_filter');
+const { upload_docs } = require('../service');
 const Engineer = require('../models/engineer_model');
 const Bank = require('../models/bank_model');
 const Engineer_Docs = require('../models/engnrDocs_model');

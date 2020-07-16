@@ -58,6 +58,11 @@ const projectSchema = new mongoose.Schema(
     totalBids: {
       type: Number,
       default: 0
+    },
+
+    revisionStatus: {
+      type: Boolean,
+      default: false
     }
   },
   {
