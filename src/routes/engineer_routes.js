@@ -1,7 +1,7 @@
 const express = require('express');
 const engnrController = require('../controller/engineer');
 const auth = require('../middleware/auth');
-const { upload_pic } = require('../file_filter');
+const { upload_pic } = require('../service');
 
 const Router = new express.Router();
 

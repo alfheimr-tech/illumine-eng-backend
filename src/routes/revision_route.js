@@ -13,7 +13,7 @@ Router.route('/revision/:id').get(
 // ACCEPTING REVISION DETAIL WITHOUT A BID
 Router.route('/revision/accept/:id').patch(
   auth,
-  revisionController.accepting_revision_detaills
+  revisionController.accepting_revision_details
 );
 
 // BID ON A REVISION PROJECT

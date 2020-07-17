@@ -25,6 +25,10 @@ exports.project_card = async (req, res) => {
       projectID: req.params.id
     });
 
+    project_docs.docs.forEach(element => {
+      element.Key = `https://illudev.s3.ap-south-1.amazonaws.com/${element.Key}`;
+    });
+
     // GET THE FAQ
 
     if (!req.query.closed) {
