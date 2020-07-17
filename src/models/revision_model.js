@@ -19,11 +19,6 @@ const revisionSchema = new mongoose.Schema(
           default: 'open'
         },
 
-        rebid: {
-          type: Boolean,
-          default: false
-        },
-
         bidReason: {
           type: String,
           trim: true

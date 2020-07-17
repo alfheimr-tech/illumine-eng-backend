@@ -15,11 +15,16 @@ exports.get_revision_details = async (req, res) => {
   }
 };
 
-exports.accepting_revision_detaills = async (req, res) => {
+exports.accepting_revision_details = async (req, res) => {
   try {
     await Revision.findOneAndUpdate(
       { 'revisions._id': req.params.id },
-      { $set: { 'revisions.$.status': 'ongoing' } }
+      {
+        $set: {
+          'revisions.$.status': 'ongoing',
+          'revisions.$.revisionBidAmount': 0
+        }
+      }
     );
 
     res.status(200).send('revision detail accepted');
@@ -32,7 +37,12 @@ exports.revision_bid = async (req, res) => {
   try {
     await Revision.findOneAndUpdate(
       { 'revisions._id': req.params.id },
-      { $set: { 'revisions.$.revisionBidAmount': 2000 } }
+      {
+        $set: {
+          'revisions.$.revisionBidAmount': req.body.revisionBidAmount,
+          'revisions.$.status': 'bid'
+        }
+      }
     );
 
     res.status(200).send('Bid placed');
@@ -44,11 +54,11 @@ exports.revision_bid = async (req, res) => {
 exports.revision_rebid = async (req, res) => {
   try {
     await Revision.findOneAndUpdate(
-      { 'revisions._id': req.params.id, 'revisions.rebid': 'true' },
+      { 'revisions._id': req.params.id },
       {
         $set: {
-          'revisions.$.revisionBidAmount': 70000,
-          'revisions.$.rebid': false
+          'revisions.$.revisionBidAmount': req.body.revisionBidAmount,
+          'revisions.$.status': 'bid'
         }
       }
     );
