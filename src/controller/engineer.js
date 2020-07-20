@@ -112,8 +112,6 @@ exports.create_engineer_profile = async (req, res) => {
 // STORING DOCS URL
 exports.upload_engnr_docs = async (req, res) => {
   try {
-    console.log('in');
-
     const engnr_docs = await Engineer_Docs.findOne({
       engineerID: req.engnr.id
     });

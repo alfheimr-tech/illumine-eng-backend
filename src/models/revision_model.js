@@ -26,7 +26,29 @@ const revisionSchema = new mongoose.Schema(
 
         revisionBidAmount: {
           type: Number
-        }
+        },
+
+        docs: [
+          {
+            Key: {
+              type: String,
+              required: true
+            },
+            extension: {
+              type: String,
+              required: true
+            },
+            url: {
+              type: String,
+              required: true
+            },
+            docType: {
+              type: String,
+              required: true,
+              enum: ['client', 'engineer']
+            }
+          }
+        ]
       }
     ]
   },

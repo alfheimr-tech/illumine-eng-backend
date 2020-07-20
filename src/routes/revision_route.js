@@ -25,4 +25,9 @@ Router.route('/revision/rebid/:id').patch(
   revisionController.revision_rebid
 );
 
+// UPLOADING REVISION DOCS
+Router.route('/revision/docs/:id')
+  .post(auth, revisionController.upload_revision_docs)
+  .patch(auth, revisionController.updateRevisionDocs);
+
 module.exports = Router;
