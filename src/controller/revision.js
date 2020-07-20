@@ -58,7 +58,9 @@ exports.revision_bid = async (req, res) => {
       { 'revisions._id': req.params.id },
       {
         $set: {
-          'revisions.$.revisionBidAmount': req.body.revisionBidAmount
+          'revisions.$.revisionBidAmount': req.body.revisionBidAmount,
+          'revisions.$.status': 'bid',
+          'revision.$.bidReason': req.body.bidReason
         }
       }
     );
@@ -78,7 +80,8 @@ exports.revision_rebid = async (req, res) => {
       {
         $set: {
           'revisions.$.revisionBidAmount': req.body.revisionBidAmount,
-          'revisions.$.status': 'bid'
+          'revisions.$.status': 'bid',
+          'revision.$.bidReason': req.body.bidReason
         }
       }
     );
