@@ -9,8 +9,6 @@ const Engineer_Docs = require('../models/engnrDocs_model');
 // const Notifications = require('../models/notifications_model');
 const { sendForgotPassword } = require('../email/account');
 
-var documents = [];
-
 // ENGINEER CREATES ACCOUNT
 
 exports.create_engineer_account = async (req, res) => {
@@ -41,6 +39,8 @@ exports.create_engineer_account = async (req, res) => {
 
 exports.create_engineer_profile = async (req, res) => {
   try {
+    var documents = [];
+
     // ENGINEERS PERSONAL DETAIL
 
     req.engnr.username = req.body.username;
@@ -88,7 +88,7 @@ exports.create_engineer_profile = async (req, res) => {
       });
     }
 
-    // // STORING BANK DETAILS OF PE
+    // STORING BANK DETAILS OF PE
 
     const bank = new Bank({
       engineerID: req.engnr._id,
@@ -102,14 +102,11 @@ exports.create_engineer_profile = async (req, res) => {
     await req.engnr.save();
 
     res.status(201).send({ message: 'profile has been created', documents });
-
-    documents = [];
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
 };
 
-// STORING DOCS URL
 exports.upload_engnr_docs = async (req, res) => {
   try {
     const engnr_docs = await Engineer_Docs.findOne({

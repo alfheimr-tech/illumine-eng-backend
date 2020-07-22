@@ -1,3 +1,6 @@
+/* eslint-disable vars-on-top */
+/* eslint-disable no-var */
+
 const { uuid } = require('uuidv4');
 const Revision = require('../models/revision_model');
 const { upload_docs } = require('../service');
@@ -58,9 +61,7 @@ exports.revision_bid = async (req, res) => {
       { 'revisions._id': req.params.id },
       {
         $set: {
-          'revisions.$.revisionBidAmount': req.body.revisionBidAmount,
-          'revisions.$.status': 'bid',
-          'revision.$.bidReason': req.body.bidReason
+          'revisions.$.revisionBidAmount': req.body.revisionBidAmount
         }
       }
     );
@@ -80,8 +81,7 @@ exports.revision_rebid = async (req, res) => {
       {
         $set: {
           'revisions.$.revisionBidAmount': req.body.revisionBidAmount,
-          'revisions.$.status': 'bid',
-          'revision.$.bidReason': req.body.bidReason
+          'revisions.$.status': 'bid'
         }
       }
     );
@@ -94,7 +94,6 @@ exports.revision_rebid = async (req, res) => {
 
 exports.upload_revision_docs = async (req, res) => {
   try {
-    // eslint-disable-next-line no-var
     var documents = [];
 
     const s3 = upload_docs();
@@ -142,6 +141,6 @@ exports.updateRevisionDocs = async (req, res) => {
     );
     res.send({ message: 'docs saved' });
   } catch (error) {
-    res.status(400).send();
+    res.status(400).send('fail');
   }
 };
