@@ -247,8 +247,10 @@ exports.active_bids = async (req, res) => {
       },
       {
         $project: {
+          _id: 0,
           bids: 1,
           totalbids_received: 1,
+          projectID: 1,
           project: {
             $map: {
               input: '$project',
