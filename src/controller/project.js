@@ -351,13 +351,11 @@ exports.engnr_uploads_projectdocs = async (req, res) => {
 
 exports.update_project_docs = async (req, res) => {
   try {
-    console.log('in');
-    console.log(req.body);
     await Project_Docs.findOneAndUpdate(
       { 'docs._id': req.params.id },
       {
         $push: {
-          'docs.$.docs': {
+          'docs.$': {
             Key: req.body.Key,
             extension: req.body.extension,
             docType: req.body.docType,
