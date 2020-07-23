@@ -1,4 +1,6 @@
 /* eslint-disable dot-notation */
+/* eslint-disable vars-on-top */
+/* eslint-disable no-var */
 const crypto = require('crypto');
 const sharp = require('sharp');
 const { uuid } = require('uuidv4');

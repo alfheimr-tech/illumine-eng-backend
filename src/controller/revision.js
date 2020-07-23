@@ -13,19 +13,7 @@ exports.get_revision_details = async (req, res) => {
       projectID: req.params.id
     });
 
-    for (let i = 0; i < revision.revisions.length; i++) {
-      for (let j = 0; j < revision.revisions[i].docs.length; j++) {
-        if (revision.revisions[i].docs[j].docType === 'client') {
-          revision.revisions[i].docs[
-            j
-          ].Key = `https://illudev.s3.ap-south-1.amazonaws.com/${revision.revisions[i].docs[j].Key}`;
-        } else {
-          revision.revisions[i].docs[
-            j
-          ].Key = `https://sushu-bucket.s3.ap-south-1.amazonaws.com/${revision.revisions[i].docs[j].Key}`;
-        }
-      }
-    }
+    await revision.append_url(revision.revisions);
 
     res.status(200).send(revision);
   } catch (error) {
@@ -126,7 +114,7 @@ exports.upload_revision_docs = async (req, res) => {
 
 exports.updateRevisionDocs = async (req, res) => {
   try {
-    await Revision.findOneAndUpdate(
+    const revision = await Revision.findOneAndUpdate(
       { 'revisions._id': req.params.id },
       {
         $push: {
@@ -137,9 +125,13 @@ exports.updateRevisionDocs = async (req, res) => {
             url: req.body.url
           }
         }
-      }
+      },
+      { new: true }
     );
-    res.send({ message: 'docs saved' });
+
+    await revision.append_url(revision.revisions);
+
+    res.send(revision);
   } catch (error) {
     res.status(400).send('fail');
   }

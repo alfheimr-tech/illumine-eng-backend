@@ -57,6 +57,24 @@ const revisionSchema = new mongoose.Schema(
   }
 );
 
+revisionSchema.methods.append_url = async revision => {
+  for (let i = 0; i < revision.length; i++) {
+    for (let j = 0; j < revision[i].docs.length; j++) {
+      if (revision[i].docs[j].docType === 'client') {
+        revision[i].docs[
+          j
+        ].Key = `https://illudev.s3.ap-south-1.amazonaws.com/${revision[i].docs[j].Key}`;
+      } else {
+        revision[i].docs[
+          j
+        ].Key = `https://sushu-bucket.s3.ap-south-1.amazonaws.com/${revision[i].docs[j].Key}`;
+      }
+    }
+  }
+
+  return null;
+};
+
 const Revision = mongoose.model('Revision', revisionSchema, 'revisions');
 
 module.exports = Revision;
