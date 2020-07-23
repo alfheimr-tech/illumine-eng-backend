@@ -26,7 +26,11 @@ exports.project_card = async (req, res) => {
     });
 
     project_docs.docs.forEach(element => {
-      element.Key = `https://illudev.s3.ap-south-1.amazonaws.com/${element.Key}`;
+      if (element.docType === 'client') {
+        element.Key = `https://illudev.s3.ap-south-1.amazonaws.com/${element.Key}`;
+      } else {
+        element.Key = `https://sushu-bucket.s3.ap-south-1.amazonaws.com/${element.Key}`;
+      }
     });
 
     // GET THE FAQ
