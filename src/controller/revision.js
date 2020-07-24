@@ -18,9 +18,10 @@ exports.get_revision_details = async (req, res) => {
 
     await revision.append_url(revision.revisions);
 
-    res
-      .status(200)
-      .send({ revision, project_name: revision.projectID.projectName });
+    res.status(200).send({
+      revision: revision.revisions,
+      project_name: revision.projectID.projectName
+    });
   } catch (error) {
     res.send({ error: error.message });
   }
@@ -45,7 +46,7 @@ exports.accepting_revision_details = async (req, res) => {
     });
 
     res.status(200).send({
-      revisions: revision.revisions,
+      revision: revision.revisions,
       project_name: revision.projectID.projectName
     });
   } catch (error) {
@@ -75,7 +76,7 @@ exports.revision_bid = async (req, res) => {
     });
 
     res.status(200).send({
-      revisions: revision.revisions,
+      revision: revision.revisions,
       project_name: revision.projectID.projectName
     });
   } catch (error) {
@@ -105,7 +106,7 @@ exports.revision_rebid = async (req, res) => {
     });
 
     res.status(200).send({
-      revisions: revision.revisions,
+      revision: revision.revisions,
       project_name: revision.projectID.projectName
     });
   } catch (error) {
@@ -167,7 +168,10 @@ exports.updateRevisionDocs = async (req, res) => {
 
     await revision.append_url(revision.revisions);
 
-    res.send({ revision, project_name: revision.projectID.projectName });
+    res.send({
+      revision: revision.revisions,
+      project_name: revision.projectID.projectName
+    });
   } catch (error) {
     res.status(400).send('fail');
   }
