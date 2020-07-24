@@ -28,6 +28,10 @@ const revisionSchema = new mongoose.Schema(
           type: Number
         },
 
+        date: {
+          type: Date
+        },
+
         docs: [
           {
             Key: {
