@@ -76,8 +76,6 @@ revisionSchema.methods.append_url = async revision => {
       }
     }
   }
-
-  return null;
 };
 
 const Revision = mongoose.model('Revision', revisionSchema, 'revisions');
