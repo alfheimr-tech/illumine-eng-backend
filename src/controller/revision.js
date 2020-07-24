@@ -45,7 +45,7 @@ exports.accepting_revision_details = async (req, res) => {
 
 exports.revision_bid = async (req, res) => {
   try {
-    await Revision.findOneAndUpdate(
+    const revision = await Revision.findOneAndUpdate(
       { 'revisions._id': req.params.id },
       {
         $set: {
@@ -53,10 +53,13 @@ exports.revision_bid = async (req, res) => {
           'revisions.$.bidReason': req.body.bidReason,
           'revisions.$.status': 'bid'
         }
+      },
+      {
+        new: true
       }
     );
 
-    res.status(200).send('Bid placed');
+    res.status(200).send({ message: 'Bid placed', revision });
   } catch (error) {
     res.send({ error: error.message });
   }
@@ -66,7 +69,7 @@ exports.revision_bid = async (req, res) => {
 
 exports.revision_rebid = async (req, res) => {
   try {
-    await Revision.findOneAndUpdate(
+    const revision = await Revision.findOneAndUpdate(
       { 'revisions._id': req.params.id },
       {
         $set: {
@@ -74,10 +77,13 @@ exports.revision_rebid = async (req, res) => {
           'revisions.$.bidReason': req.body.bidReason,
           'revisions.$.status': 'bid'
         }
+      },
+      {
+        new: true
       }
     );
 
-    res.status(200).send('Rebid placed');
+    res.status(200).send({ message: 'Rebid placed', revision });
   } catch (error) {
     res.send({ error: error.message });
   }
