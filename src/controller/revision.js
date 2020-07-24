@@ -1,8 +1,8 @@
 /* eslint-disable vars-on-top */
 /* eslint-disable no-var */
-
 const { uuid } = require('uuidv4');
 const Revision = require('../models/revision_model');
+const Project = require('../models/project_model');
 const { upload_docs } = require('../service');
 
 // LIST OUT ALL THE REVISON PROJECT DETAILS
@@ -11,11 +11,16 @@ exports.get_revision_details = async (req, res) => {
   try {
     const revision = await Revision.findOne({
       projectID: req.params.id
+    }).populate({
+      path: 'projectID',
+      select: 'projectName -_id'
     });
 
     await revision.append_url(revision.revisions);
 
-    res.status(200).send(revision);
+    res
+      .status(200)
+      .send({ revision, project_name: revision.projectID.projectName });
   } catch (error) {
     res.send({ error: error.message });
   }
@@ -25,17 +30,24 @@ exports.get_revision_details = async (req, res) => {
 
 exports.accepting_revision_details = async (req, res) => {
   try {
-    await Revision.findOneAndUpdate(
+    const revision = await Revision.findOneAndUpdate(
       { 'revisions._id': req.params.id },
       {
         $set: {
           'revisions.$.status': 'ongoing',
           'revisions.$.revisionBidAmount': 0
         }
-      }
-    );
+      },
+      { new: true }
+    ).populate({
+      path: 'projectID',
+      select: 'projectName -_id'
+    });
 
-    res.status(200).send('revision detail accepted');
+    res.status(200).send({
+      revisions: revision.revisions,
+      project_name: revision.projectID.projectName
+    });
   } catch (error) {
     res.send({ error: error.message });
   }
@@ -57,9 +69,15 @@ exports.revision_bid = async (req, res) => {
       {
         new: true
       }
-    );
+    ).populate({
+      path: 'projectID',
+      select: 'projectName -_id'
+    });
 
-    res.status(200).send({ revisions: revision.revisions });
+    res.status(200).send({
+      revisions: revision.revisions,
+      project_name: revision.projectID.projectName
+    });
   } catch (error) {
     res.send({ error: error.message });
   }
@@ -81,9 +99,15 @@ exports.revision_rebid = async (req, res) => {
       {
         new: true
       }
-    );
+    ).populate({
+      path: 'projectID',
+      select: 'projectName -_id'
+    });
 
-    res.status(200).send({ revisions: revision.revisions });
+    res.status(200).send({
+      revisions: revision.revisions,
+      project_name: revision.projectID.projectName
+    });
   } catch (error) {
     res.send({ error: error.message });
   }
@@ -136,11 +160,14 @@ exports.updateRevisionDocs = async (req, res) => {
         }
       },
       { new: true }
-    );
+    ).populate({
+      path: 'projectID',
+      select: 'projectName -_id'
+    });
 
     await revision.append_url(revision.revisions);
 
-    res.send(revision);
+    res.send({ revision, project_name: revision.projectID.projectName });
   } catch (error) {
     res.status(400).send('fail');
   }
