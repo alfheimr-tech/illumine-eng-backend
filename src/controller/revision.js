@@ -59,7 +59,7 @@ exports.revision_bid = async (req, res) => {
       }
     );
 
-    res.status(200).send({ message: 'Bid placed', revision });
+    res.status(200).send(revision.revisions);
   } catch (error) {
     res.send({ error: error.message });
   }
@@ -83,7 +83,7 @@ exports.revision_rebid = async (req, res) => {
       }
     );
 
-    res.status(200).send({ message: 'Rebid placed', revision });
+    res.status(200).send(revision.revisions);
   } catch (error) {
     res.send({ error: error.message });
   }
