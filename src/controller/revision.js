@@ -66,7 +66,7 @@ exports.revision_bid = async (req, res) => {
 
 exports.revision_rebid = async (req, res) => {
   try {
-    const revision = await Revision.findOneAndUpdate(
+    await Revision.findOneAndUpdate(
       { 'revisions._id': req.params.id },
       {
         $set: {
@@ -74,13 +74,8 @@ exports.revision_rebid = async (req, res) => {
           'revisions.$.bidReason': req.body.bidReason,
           'revisions.$.status': 'bid'
         }
-      },
-      {
-        new: true
       }
     );
-
-    console.log(revision);
 
     res.status(200).send('Rebid placed');
   } catch (error) {
