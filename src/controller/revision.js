@@ -2,7 +2,6 @@
 /* eslint-disable no-var */
 const { uuid } = require('uuidv4');
 const Revision = require('../models/revision_model');
-const Project = require('../models/project_model');
 const { upload_docs } = require('../service');
 
 // LIST OUT ALL THE REVISON PROJECT DETAILS
