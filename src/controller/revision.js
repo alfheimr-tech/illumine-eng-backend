@@ -4,6 +4,23 @@ const { uuid } = require('uuidv4');
 const Revision = require('../models/revision_model');
 const { upload_docs } = require('../service');
 
+// eslint-disable-next-line no-undef
+urlFormatter = revision => {
+  for (let i = 0; i < revision.length; i++) {
+    for (let j = 0; j < revision[i].docs.length; j++) {
+      if (revision[i].docs[j].docType.match('client')) {
+        revision[i].docs[
+          j
+        ].Key = `https://illudev.s3.ap-south-1.amazonaws.com/${revision[i].docs[j].Key}`;
+      } else {
+        revision[i].docs[
+          j
+        ].Key = `https://sushu-bucket.s3.ap-south-1.amazonaws.com/${revision[i].docs[j].Key}`;
+      }
+    }
+  }
+};
+
 // LIST OUT ALL THE REVISON PROJECT DETAILS
 
 exports.get_revision_details = async (req, res) => {
@@ -15,7 +32,7 @@ exports.get_revision_details = async (req, res) => {
       select: 'projectName -_id'
     });
 
-    await revision.append_url(revision.revisions);
+    await revision.urlFormatter(revision.revisions);
 
     res.status(200).send({
       revision: revision.revisions,
@@ -165,7 +182,7 @@ exports.updateRevisionDocs = async (req, res) => {
       select: 'projectName -_id'
     });
 
-    await revision.append_url(revision.revisions);
+    await revision.urlFormatter(revision.revisions);
 
     res.send({
       revision: revision.revisions,

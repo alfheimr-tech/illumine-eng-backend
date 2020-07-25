@@ -47,12 +47,14 @@ const engineerSchema = new mongoose.Schema({
     {
       location: {
         type: String,
-        trim: true
+        trim: true,
+        lowercase: true
       },
 
       licence: {
         type: String,
-        trim: true
+        trim: true,
+        lowercase: true
       }
     }
   ],
