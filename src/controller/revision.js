@@ -32,7 +32,7 @@ exports.get_revision_details = async (req, res) => {
       select: 'projectName -_id'
     });
 
-    await revision.urlFormatter(revision.revisions);
+    await urlFormatter(revision.revisions);
 
     res.status(200).send({
       revision: revision.revisions,
@@ -182,7 +182,7 @@ exports.updateRevisionDocs = async (req, res) => {
       select: 'projectName -_id'
     });
 
-    await revision.urlFormatter(revision.revisions);
+    await urlFormatter(revision.revisions);
 
     res.send({
       revision: revision.revisions,
