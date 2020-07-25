@@ -124,7 +124,7 @@ exports.upload_engnr_docs = async (req, res) => {
 
     await engnr_docs.save();
 
-    res.send('successful');
+    res.send();
   } catch (error) {
     res.status(400).send({ error: 'Fail' });
   }
