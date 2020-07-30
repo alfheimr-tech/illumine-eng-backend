@@ -1,6 +1,8 @@
 /* eslint-disable vars-on-top */
 /* eslint-disable no-var */
 const mongoose = require('mongoose');
+const { uuid } = require('uuidv4');
+const { upload_docs } = require('../service');
 const Project = require('../models/project_model');
 const Project_Docs = require('../models/projectDocs_model');
 const Client = require('../models/client_model');
@@ -72,5 +74,60 @@ exports.engineer_postsQuestion = async (req, res) => {
     res.status(200).send({ message: 'Question has been posted' });
   } catch (error) {
     res.status(400).send({ error: error.message });
+  }
+};
+
+// ENGINEER UPLOADS DOCUMENTS
+
+exports.engnr_uploads_projectdocs = async (req, res) => {
+  try {
+    var documents = [];
+
+    const s3 = upload_docs();
+
+    const getUrl = async (fileDetail, key) => {
+      return s3.getSignedUrl('putObject', {
+        Bucket: 'sushu-bucket',
+        Key: key,
+        ContentType: fileDetail.fileType
+      });
+    };
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const fileDetail of req.body.fileDetails) {
+      const key = `${req.engnr.id}/${uuid()}.${fileDetail.extension}`;
+      documents.push({
+        // eslint-disable-next-line no-await-in-loop
+        url: await getUrl(fileDetail, key),
+        key,
+        fileType: fileDetail.fileType,
+        extension: fileDetail.extension
+      });
+    }
+
+    res.status(201).send(documents);
+  } catch (error) {
+    res.status(400).send('fail');
+  }
+};
+
+// SAVING THE DOCS
+
+exports.update_project_docs = async (req, res) => {
+  try {
+    await Project_Docs.findOneAndUpdate(
+      { projectID: req.params.id },
+      {
+        $push: {
+          docs: {
+            // eslint-disable-next-line node/no-unsupported-features/es-syntax
+            ...req.body
+          }
+        }
+      }
+    );
+    res.send({ message: 'docs saved' });
+  } catch (error) {
+    res.status(400).send('fail');
   }
 };

@@ -59,7 +59,7 @@ const engineerSchema = new mongoose.Schema({
     }
   ],
 
-  engineer_rating: {
+  engineer_avg_rating: {
     type: mongoose.Decimal128,
     default: 0.0
   },

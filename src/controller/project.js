@@ -5,11 +5,9 @@
 /* eslint-disable no-shadow */
 /* eslint-disable node/no-unsupported-features/es-syntax */
 const mongoose = require('mongoose');
-const { uuid } = require('uuidv4');
-const { upload_docs } = require('../service');
 const Project = require('../models/project_model');
 const BidHistory = require('../models/bid_model');
-const Project_Docs = require('../models/projectDocs_model');
+// const Project_Docs = require('../models/projectDocs_model');
 
 // ENGINEER BROWSES ALL THE PROJECTS IN OPEN STATE
 
@@ -314,57 +312,5 @@ exports.engineer_rebids = async (req, res) => {
     res.status(202).send({ message: 'updated', bid });
   } catch (error) {
     res.status(400).send({ error: error.message });
-  }
-};
-
-// ENGINEER UPLOADS DOCUMENTS
-
-exports.engnr_uploads_projectdocs = async (req, res) => {
-  try {
-    var documents = [];
-
-    const s3 = upload_docs();
-
-    const getUrl = async (fileDetail, key) => {
-      return s3.getSignedUrl('putObject', {
-        Bucket: 'sushu-bucket',
-        Key: key,
-        ContentType: fileDetail.fileType
-      });
-    };
-
-    // eslint-disable-next-line no-restricted-syntax
-    for (const fileDetail of req.body.fileDetails) {
-      const key = `${req.engnr.id}/${uuid()}.${fileDetail.extension}`;
-      documents.push({
-        // eslint-disable-next-line no-await-in-loop
-        url: await getUrl(fileDetail, key),
-        key,
-        fileType: fileDetail.fileType,
-        extension: fileDetail.extension
-      });
-    }
-
-    res.status(201).send(documents);
-  } catch (error) {
-    res.status(400).send('fail');
-  }
-};
-
-exports.update_project_docs = async (req, res) => {
-  try {
-    await Project_Docs.findOneAndUpdate(
-      { projectID: req.params.id },
-      {
-        $push: {
-          docs: {
-            ...req.body
-          }
-        }
-      }
-    );
-    res.send({ message: 'docs saved' });
-  } catch (error) {
-    res.status(400).send('fail');
   }
 };
