@@ -25,9 +25,4 @@ Router.route('/completed/project').get(
 // ENGINEER REBIDS ON A PROJECT
 Router.route('/rebid/:id').post(auth, ProjectController.engineer_rebids);
 
-// ENGINEER UPLOADS DOCS
-Router.route('/docs/upload/:id')
-  .post(auth, ProjectController.engnr_uploads_projectdocs)
-  .patch(auth, ProjectController.update_project_docs);
-
 module.exports = Router;

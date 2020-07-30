@@ -16,4 +16,10 @@ Router.route('/post/:id').post(
   Project_cardController.engineer_postsQuestion
 );
 
+// ENGINEER UPLOADS DOCS
+
+Router.route('/docs/upload/:id')
+  .post(auth, Project_cardController.engnr_uploads_projectdocs)
+  .patch(auth, Project_cardController.update_project_docs);
+
 module.exports = Router;
