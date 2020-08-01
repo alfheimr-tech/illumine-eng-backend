@@ -59,7 +59,9 @@ exports.create_engineer_profile = async (req, res) => {
     //   req.engnr.avatar = buffer;
     // }
 
-    req.engnr.avatar = req.body.avatar;
+    if (req.body.avatar) {
+      req.engnr.avatar = req.body.avatar;
+    }
 
     req.engnr.phone = req.body.phone;
 
