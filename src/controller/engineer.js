@@ -43,6 +43,10 @@ exports.create_engineer_profile = async (req, res) => {
   try {
     var documents = [];
 
+    console.log(req.body);
+
+    console.log(req.file);
+
     // ENGINEERS PERSONAL DETAIL
 
     req.engnr.username = req.body.username;
@@ -50,7 +54,6 @@ exports.create_engineer_profile = async (req, res) => {
     req.engnr.password = req.body.password;
 
     if (req.file) {
-      console.log(req.file);
       const buffer = await sharp(req.file.buffer)
         .resize({ width: 250, height: 250 })
         .png()
