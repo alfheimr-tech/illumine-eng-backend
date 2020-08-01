@@ -9,15 +9,16 @@ const Router = new express.Router();
 Router.route('/signup').post(engnrController.create_engineer_account);
 
 // ENGINEER PROFILE ROUTE
-Router.route('/profile').post(
-  auth,
-  upload_pic.single('avatar'),
-  engnrController.create_engineer_profile,
-  (error, req, res, next) => {
-    res.status(400).send({ error: error.message });
-  }
-);
-// .put(auth, engnrController.upload_engnr_docs);
+Router.route('/profile')
+  .post(
+    auth,
+    upload_pic.single('avatar'),
+    engnrController.create_engineer_profile,
+    (error, req, res, next) => {
+      res.status(400).send({ error: error.message });
+    }
+  )
+  .put(auth, engnrController.upload_engnr_docs);
 
 // ENGINEER EMAIL VERIFY ROUTE
 Router.route('/confirm_mail/:email_token').put(

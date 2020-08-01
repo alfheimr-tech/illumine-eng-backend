@@ -41,92 +41,92 @@ exports.create_engineer_account = async (req, res) => {
 
 exports.create_engineer_profile = async (req, res) => {
   try {
-    // var documents = [];
+    var documents = [];
 
     console.log(req.body);
 
-    console.log(req.body.avatar);
-
     // ENGINEERS PERSONAL DETAIL
 
-    //     req.engnr.username = req.body.username;
+    req.engnr.username = req.body.username;
 
-    //     req.engnr.password = req.body.password;
+    req.engnr.password = req.body.password;
 
-    //     if (req.file) {
-    //       const buffer = await sharp(req.file.buffer)
-    //         .resize({ width: 250, height: 250 })
-    //         .png()
-    //         .toBuffer();
-    //       req.engnr.avatar = buffer;
-    //     }
+    // if (req.file) {
+    //   const buffer = await sharp(req.file.buffer)
+    //     .resize({ width: 250, height: 250 })
+    //     .png()
+    //     .toBuffer();
+    //   req.engnr.avatar = buffer;
+    // }
 
-    //     req.engnr.phone = req.body.phone;
+    req.engnr.avatar = req.body.avatar;
 
-    //     for (let i = 0; i < req.body.location.length; i++) {
-    //       req.engnr.profession.push({
-    //         location: req.body.location[i],
-    //         licence: req.body.licence[i]
-    //       });
-    //     }
+    req.engnr.phone = req.body.phone;
 
-    //     // HAVE TO STORE DOCUMENTS
+    for (let i = 0; i < req.body.location.length; i++) {
+      req.engnr.profession.push({
+        location: req.body.location[i],
+        licence: req.body.licence[i]
+      });
+    }
 
-    //     const s3 = upload_docs();
+    // HAVE TO STORE DOCUMENTS
 
-    //     const getUrl = async (fileDetail, key) => {
-    //       return s3.getSignedUrl('putObject', {
-    //         Bucket: 'sushu-bucket',
-    //         Key: key,
-    //         ContentType: fileDetail.fileType
-    //       });
-    //     };
+    const s3 = upload_docs();
 
-    //     // eslint-disable-next-line no-restricted-syntax
-    //     for (const fileDetail of req.body.fileDetails) {
-    //       const key = `${req.engnr.id}/${uuid()}.${fileDetail.extension}`;
-    //       documents.push({
-    //         // eslint-disable-next-line no-await-in-loop
-    //         url: await getUrl(fileDetail, key),
-    //         key,
-    //         fileType: fileDetail.fileType,
-    //         extension: fileDetail.extension
-    //       });
-    //     }
+    const getUrl = async (fileDetail, key) => {
+      return s3.getSignedUrl('putObject', {
+        Bucket: 'sushu-bucket',
+        Key: key,
+        ContentType: fileDetail.fileType
+      });
+    };
 
-    //     // STORING BANK DETAILS OF PE
+    // eslint-disable-next-line no-restricted-syntax
+    for (const fileDetail of req.body.fileDetails) {
+      const key = `${req.engnr.id}/${uuid()}.${fileDetail.extension}`;
+      documents.push({
+        // eslint-disable-next-line no-await-in-loop
+        url: await getUrl(fileDetail, key),
+        key,
+        fileType: fileDetail.fileType,
+        extension: fileDetail.extension
+      });
+    }
 
-    //     const bank = new Bank({
-    //       engineerID: req.engnr._id,
-    //       bankName: req.body.bankName,
-    //       accountNumber: req.body.accountNumber,
-    //       ABA: req.body.ABA
-    //     });
+    // STORING BANK DETAILS OF PE
 
-    //     await bank.save();
+    const bank = new Bank({
+      engineerID: req.engnr._id,
+      bankName: req.body.bankName,
+      accountNumber: req.body.accountNumber,
+      ABA: req.body.ABA
+    });
 
-    //     await req.engnr.save();
+    await bank.save();
 
-    //     res.status(201).send({ message: 'profile has been created', documents });
-    //   } catch (error) {
-    //     res.status(400).send({ error: error.message });
-    //   }
-    // };
+    await req.engnr.save();
 
-    // exports.upload_engnr_docs = async (req, res) => {
-    //   try {
-    //     const engnr_docs = await Engineer_Docs.findOne({
-    //       engineerID: req.engnr.id
-    //     });
+    res.status(201).send({ message: 'profile has been created', documents });
+  } catch (error) {
+    res.status(400).send({ error: error.message });
+  }
+};
 
-    //     engnr_docs.docs.push({
-    //       Key: req.body.key,
-    //       url: req.body.url,
-    //       extension: req.body.extension,
-    //       docType: 'engineer'
-    //     });
+exports.upload_engnr_docs = async (req, res) => {
+  try {
+    const engnr_docs = await Engineer_Docs.findOne({
+      engineerID: req.engnr.id
+    });
 
-    //     await engnr_docs.save();
+    engnr_docs.docs.push({
+      Key: req.body.key,
+      url: req.body.url,
+      extension: req.body.extension,
+      docType: 'engineer'
+    });
+
+    await engnr_docs.save();
 
     res.send();
   } catch (error) {
