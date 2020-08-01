@@ -50,6 +50,7 @@ exports.create_engineer_profile = async (req, res) => {
     req.engnr.password = req.body.password;
 
     if (req.file) {
+      console.log(req.file);
       const buffer = await sharp(req.file.buffer)
         .resize({ width: 250, height: 250 })
         .png()
@@ -116,7 +117,7 @@ exports.upload_engnr_docs = async (req, res) => {
     });
 
     engnr_docs.docs.push({
-      key: req.body.key,
+      Key: req.body.key,
       url: req.body.url,
       extension: req.body.extension,
       docType: 'engineer'
