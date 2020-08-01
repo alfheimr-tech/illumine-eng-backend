@@ -45,7 +45,7 @@ exports.create_engineer_profile = async (req, res) => {
 
     console.log(req.body);
 
-    console.log(req.body.avatar);
+    console.log(req.body.fileDetails);
 
     // ENGINEERS PERSONAL DETAIL
 
