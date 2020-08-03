@@ -10,7 +10,7 @@ const sendWelcomeEmail = (email, token) => {
     text:
       'welcome to illumine industries where PE meets clients. \n' +
       'please click on the below link to verify your mail. \n' +
-      `https://illumineengineer.web.app/engineer/register/${token}`
+      `https://illumineiengineer.web.app/engineer/register/${token}`
   });
 };
 
