@@ -43,6 +43,8 @@ exports.create_engineer_profile = async (req, res) => {
   try {
     var documents = [];
 
+    console.log(req.body.avatar);
+
     // ENGINEERS PERSONAL DETAIL
     req.engnr.username = req.body.username;
 
