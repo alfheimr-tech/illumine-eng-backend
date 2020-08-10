@@ -45,6 +45,10 @@ exports.create_engineer_profile = async (req, res) => {
 
     console.log(req.body);
 
+    console.log(JSON.parse(req.body.fileDetails[0]));
+
+    console.log(JSON.parse(req.body.fileDetails));
+
     // // ENGINEERS PERSONAL DETAIL
     // req.engnr.username = req.body.username;
 
