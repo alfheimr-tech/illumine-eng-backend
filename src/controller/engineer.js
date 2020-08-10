@@ -103,6 +103,7 @@ exports.create_engineer_profile = async (req, res) => {
 
     res.status(201).send({ message: 'profile has been created', documents });
   } catch (error) {
+    console.log(error);
     res.status(400).send({ error: error.message });
   }
 };
