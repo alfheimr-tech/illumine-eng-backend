@@ -79,6 +79,7 @@ exports.create_engineer_profile = async (req, res) => {
 
     // eslint-disable-next-line no-restricted-syntax
     for (const fileDetail of req.body.fileDetails) {
+      console.log(fileDetail.fileType);
       const key = `${req.engnr.id}/${uuid()}.${fileDetail.extension}`;
       documents.push({
         // eslint-disable-next-line no-await-in-loop
@@ -100,6 +101,8 @@ exports.create_engineer_profile = async (req, res) => {
     await bank.save();
 
     await req.engnr.save();
+
+    console.log(documents);
 
     res.status(201).send({ message: 'profile has been created', documents });
   } catch (error) {
