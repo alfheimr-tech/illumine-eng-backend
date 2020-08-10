@@ -42,7 +42,7 @@ exports.create_engineer_account = async (req, res) => {
 exports.create_engineer_profile = async (req, res) => {
   try {
     var documents = [];
-    console.log(req.body.file);
+    console.log(req.file);
 
     // ENGINEERS PERSONAL DETAIL
     req.engnr.username = req.body.username;
@@ -56,9 +56,9 @@ exports.create_engineer_profile = async (req, res) => {
     //   req.engnr.avatar = buffer;
     // }
 
-    if (req.body.file) {
+    if (req.file) {
       console.log('in');
-      req.engnr.avatar = req.body.file.buffer;
+      req.engnr.avatar = req.file.buffer;
     }
 
     req.engnr.phone = req.body.phone;
