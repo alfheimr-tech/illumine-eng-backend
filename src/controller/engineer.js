@@ -42,7 +42,6 @@ exports.create_engineer_account = async (req, res) => {
 exports.create_engineer_profile = async (req, res) => {
   try {
     var documents = [];
-    console.log(req.file);
 
     // ENGINEERS PERSONAL DETAIL
     req.engnr.username = req.body.username;
@@ -57,7 +56,6 @@ exports.create_engineer_profile = async (req, res) => {
     // }
 
     if (req.file) {
-      console.log('in');
       req.engnr.avatar = req.file.buffer;
     }
 
@@ -81,7 +79,6 @@ exports.create_engineer_profile = async (req, res) => {
 
     // eslint-disable-next-line no-restricted-syntax
     for (const fileDetail of req.body.fileDetails) {
-      console.log(fileDetail.extension);
       const key = `${req.engnr.id}/${uuid()}.${fileDetail.extension}`;
       documents.push({
         // eslint-disable-next-line no-await-in-loop
