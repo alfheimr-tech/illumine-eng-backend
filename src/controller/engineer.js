@@ -41,73 +41,75 @@ exports.create_engineer_account = async (req, res) => {
 
 exports.create_engineer_profile = async (req, res) => {
   try {
-    var documents = [];
+    // var documents = [];
 
-    // ENGINEERS PERSONAL DETAIL
+    // // ENGINEERS PERSONAL DETAIL
 
-    req.engnr.username = req.body.username;
+    // req.engnr.username = req.body.username;
 
-    req.engnr.password = req.body.password;
+    // req.engnr.password = req.body.password;
 
-    // if (req.file) {
-    //   const buffer = await sharp(req.file.buffer)
-    //     .resize({ width: 250, height: 250 })
-    //     .png()
-    //     .toBuffer();
-    //   req.engnr.avatar = buffer;
+    // // if (req.file) {
+    // //   const buffer = await sharp(req.file.buffer)
+    // //     .resize({ width: 250, height: 250 })
+    // //     .png()
+    // //     .toBuffer();
+    // //   req.engnr.avatar = buffer;
+    // // }
+
+    // if (req.body.avatar) {
+    //   req.engnr.avatar = req.body.avatar;
     // }
 
-    if (req.body.avatar) {
-      req.engnr.avatar = req.body.avatar;
-    }
+    // req.engnr.phone = req.body.phone;
 
-    req.engnr.phone = req.body.phone;
+    // for (let i = 0; i < req.body.location.length; i++) {
+    //   req.engnr.profession.push({
+    //     location: req.body.location[i],
+    //     licence: req.body.licence[i]
+    //   });
+    // }
 
-    for (let i = 0; i < req.body.location.length; i++) {
-      req.engnr.profession.push({
-        location: req.body.location[i],
-        licence: req.body.licence[i]
-      });
-    }
+    // // HAVE TO STORE DOCUMENTS
 
-    // HAVE TO STORE DOCUMENTS
+    // const s3 = upload_docs();
 
-    const s3 = upload_docs();
+    // const getUrl = async (fileDetail, key) => {
+    //   return s3.getSignedUrl('putObject', {
+    //     Bucket: 'sushu-bucket',
+    //     Key: key,
+    //     ContentType: fileDetail.fileType
+    //   });
+    // };
 
-    const getUrl = async (fileDetail, key) => {
-      return s3.getSignedUrl('putObject', {
-        Bucket: 'sushu-bucket',
-        Key: key,
-        ContentType: fileDetail.fileType
-      });
-    };
+    // // eslint-disable-next-line no-restricted-syntax
+    // for (const fileDetail of req.body.fileDetails) {
+    //   const key = `${req.engnr.id}/${uuid()}.${fileDetail.extension}`;
+    //   documents.push({
+    //     // eslint-disable-next-line no-await-in-loop
+    //     url: await getUrl(fileDetail, key),
+    //     key,
+    //     fileType: fileDetail.fileType,
+    //     extension: fileDetail.extension
+    //   });
+    // }
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (const fileDetail of req.body.fileDetails) {
-      const key = `${req.engnr.id}/${uuid()}.${fileDetail.extension}`;
-      documents.push({
-        // eslint-disable-next-line no-await-in-loop
-        url: await getUrl(fileDetail, key),
-        key,
-        fileType: fileDetail.fileType,
-        extension: fileDetail.extension
-      });
-    }
+    // // STORING BANK DETAILS OF PE
 
-    // STORING BANK DETAILS OF PE
+    // const bank = new Bank({
+    //   engineerID: req.engnr._id,
+    //   bankName: req.body.bankName,
+    //   accountNumber: req.body.accountNumber,
+    //   ABA: req.body.ABA
+    // });
 
-    const bank = new Bank({
-      engineerID: req.engnr._id,
-      bankName: req.body.bankName,
-      accountNumber: req.body.accountNumber,
-      ABA: req.body.ABA
-    });
+    // await bank.save();
 
-    await bank.save();
+    // await req.engnr.save();
 
-    await req.engnr.save();
+    res.send(req.body);
 
-    res.status(201).send({ message: 'profile has been created', documents });
+    // res.status(201).send({ message: 'profile has been created', documents });
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
