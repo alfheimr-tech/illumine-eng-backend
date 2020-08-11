@@ -9,7 +9,7 @@ const Engineer = require('../models/engineer_model');
 const Bank = require('../models/bank_model');
 const Engineer_Docs = require('../models/engnrDocs_model');
 // const Notifications = require('../models/notifications_model');
-const { sendForgotPassword } = require('../email/account');
+const { sendForgotPassword, sendWelcomeEmail } = require('../email/account');
 
 // ENGINEER CREATES ACCOUNT
 
@@ -32,6 +32,22 @@ exports.create_engineer_account = async (req, res) => {
     await engnr_docs.save();
 
     res.status(201).send({ message: 'created successfully' });
+  } catch (error) {
+    res.status(400).send({ error: error.message });
+  }
+};
+
+// RESEND  WELCOME EMAIL TO ENGINEER
+
+exports.resend_engnr_mail = async (req, res) => {
+  try {
+    const engnr = await Engineer.findOne({ email: req.body.email });
+
+    const token = await engnr.createToken(true);
+
+    sendWelcomeEmail(req.body.email, token);
+
+    res.status(201).send({ message: 'mail sent' });
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
@@ -79,7 +95,6 @@ exports.create_engineer_profile = async (req, res) => {
 
     // eslint-disable-next-line no-restricted-syntax
     for (const fileDetail of req.body.fileDetails) {
-      console.log(fileDetail.fileType);
       const key = `${req.engnr.id}/${uuid()}.${fileDetail.extension}`;
       documents.push({
         // eslint-disable-next-line no-await-in-loop
@@ -102,11 +117,8 @@ exports.create_engineer_profile = async (req, res) => {
 
     await req.engnr.save();
 
-    console.log(documents);
-
     res.status(201).send({ message: 'profile has been created', documents });
   } catch (error) {
-    console.log(error);
     res.status(400).send({ error: error.message });
   }
 };

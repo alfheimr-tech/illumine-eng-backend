@@ -25,6 +25,9 @@ Router.route('/confirm_mail/:email_token').put(
   engnrController.engineer_emailverify
 );
 
+// ENGINEER RESEND  VERIFICATION MAIL
+Router.route('/resend/mail').patch(engnrController.resend_engnr_mail);
+
 // ENGINE LOGIN ROUTE
 Router.route('/login').post(engnrController.engineer_login);
 
