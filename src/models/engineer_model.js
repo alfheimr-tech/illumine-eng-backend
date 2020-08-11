@@ -25,7 +25,7 @@ const engineerSchema = new mongoose.Schema({
 
   password: {
     type: String,
-    minlength: 8,
+    minlength: 6,
     trim: true
   },
 
