@@ -32,7 +32,7 @@ Router.route('/login').post(engnrController.engineer_login);
 Router.route('/logout').post(auth, engnrController.engineer_logout);
 
 // ENGINEER FORGOT PASSWORD
-Router.route('/forgot_password').post(engnrController.engineer_forgotpassword);
+Router.route('/forgot/password').post(engnrController.engineer_forgotpassword);
 
 // ENGINEER RESET PASSWORD
 Router.route('/reset/:pwd_token').patch(engnrController.engineer_resetpassword);
