@@ -208,14 +208,13 @@ exports.engineer_emailverify = async (req, res) => {
 
 exports.engineer_forgotpassword = async (req, res) => {
   try {
-    console.log(req.body);
     const engnr = await Engineer.findByCredentials(req.body.email);
-
-    console.log(engnr);
 
     const token = await engnr.createToken(false);
 
     sendForgotPassword(engnr.email, token);
+
+    await engnr.save();
 
     res.status(200).send({ message: 'mail sent' });
   } catch (error) {

@@ -187,11 +187,13 @@ engineerSchema.statics.findByCredentials = async function(email, password) {
 // PRE HOOK
 
 engineerSchema.pre('save', async function(next) {
+  console.log('1');
   if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 8);
   }
 
   if (this.isModified('email')) {
+    console.log('in');
     const token = this.createToken(true);
     this.emailVerify = false;
 
