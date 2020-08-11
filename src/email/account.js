@@ -17,9 +17,9 @@ const sendWelcomeEmail = (email, token) => {
 const sendForgotPassword = (email, token) => {
   sgmail.send({
     to: email,
-    from: 'zz10sushmit@gmail.com',
+    from: 'hotbabes@sexy.com',
     subject: 'Forgot Password Email',
-    text: `http://localhost:3000/api/engineer/reset/${token}`
+    text: `http://localhost:4201/engineer/forgetpassword/${token}`
   });
 };
 module.exports = { sendWelcomeEmail, sendForgotPassword };
