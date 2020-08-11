@@ -35,7 +35,9 @@ Router.route('/logout').post(auth, engnrController.engineer_logout);
 Router.route('/forgot/password').post(engnrController.engineer_forgotpassword);
 
 // ENGINEER RESET PASSWORD
-Router.route('/reset/:pwd_token').patch(engnrController.engineer_resetpassword);
+Router.route('/reset/password/:pwd_token').patch(
+  engnrController.engineer_resetpassword
+);
 
 // ENGINEER VIEWS HIS PROFILE
 Router.route('/profile/view').get(auth, engnrController.engineer_viewprofile);
