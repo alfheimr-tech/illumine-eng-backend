@@ -14,7 +14,6 @@ const bankSchema = new mongoose.Schema({
   },
 
   accountNumber: {
-    unique: true,
     type: Number,
     require: true,
     trim: true

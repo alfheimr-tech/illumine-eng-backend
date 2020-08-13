@@ -192,11 +192,10 @@ engineerSchema.pre('save', async function(next) {
   }
 
   if (this.isModified('email')) {
-    console.log('in');
     const token = this.createToken(true);
     this.emailVerify = false;
 
-    sendWelcomeEmail(this.email, token);
+    // sendWelcomeEmail(this.email, token);
   }
 
   next();

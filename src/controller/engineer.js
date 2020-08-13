@@ -15,12 +15,16 @@ const { sendForgotPassword, sendWelcomeEmail } = require('../email/account');
 
 exports.create_engineer_account = async (req, res) => {
   try {
+    console.log(req.body.email);
+
     const engnr_check = await Engineer.findOne({ email: req.body.email });
+
     if (engnr_check) {
       throw new Error(
         'This email id has already been registered! Please use an unregistered email id'
       );
     }
+
     const engnr = new Engineer(req.body);
 
     await engnr.save();
@@ -46,6 +50,8 @@ exports.resend_engnr_mail = async (req, res) => {
     const token = await engnr.createToken(true);
 
     sendWelcomeEmail(req.body.email, token);
+
+    await engnr.save();
 
     res.status(201).send({ message: 'mail sent' });
   } catch (error) {
