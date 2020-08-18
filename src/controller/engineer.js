@@ -47,8 +47,6 @@ exports.resend_engnr_mail = async (req, res) => {
 
     const token = await engnr.createToken(true);
 
-    console.log(`${req.body.email}\n${token}`);
-
     sendWelcomeEmail(req.body.email, token);
 
     await engnr.save();
