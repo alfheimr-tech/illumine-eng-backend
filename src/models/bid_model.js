@@ -2,43 +2,37 @@ const mongoose = require('mongoose');
 
 const bidSchema = new mongoose.Schema({
   projectID: {
-    type: mongoose.Schema.Types.ObjectId,
-    trim: true,
-    ref: 'Project'
+    type: mongoose.Schema.Types.ObjectId
   },
-
   bids: [
     {
       engineerID: {
         type: mongoose.Schema.Types.ObjectId,
-        trim: true
+        index: true,
+        ref: 'Engineer'
       },
-
+      bidAmount: {
+        type: Number
+      },
+      splitUp: {
+        type: String
+      },
       rebid: {
         type: Boolean,
         default: false
       },
-
       rebidReason: {
         type: String
       },
-
-      bidAmount: {
-        type: Number,
-        trim: true
+      engineerAction: {
+        type: Boolean,
+        default: false
       },
-
-      splitUp: {
-        type: String,
-        trim: true
-      },
-
       active: {
         type: Boolean,
         default: true
       },
-
-      engineerAction: {
+      accepted: {
         type: Boolean,
         default: false
       }

@@ -15,8 +15,6 @@ const { sendForgotPassword, sendWelcomeEmail } = require('../email/account');
 
 exports.create_engineer_account = async (req, res) => {
   try {
-    console.log(req.body.email);
-
     const engnr_check = await Engineer.findOne({ email: req.body.email });
 
     if (engnr_check) {
@@ -48,6 +46,8 @@ exports.resend_engnr_mail = async (req, res) => {
     const engnr = await Engineer.findOne({ email: req.body.email });
 
     const token = await engnr.createToken(true);
+
+    console.log(`${req.body.email}\n${token}`);
 
     sendWelcomeEmail(req.body.email, token);
 
@@ -282,7 +282,11 @@ exports.engineer_viewprofile = async (req, res) => {
       new Error('could not find any details')
     );
 
-    res.status(200).send({ profile: req.engnr, bank_details: bank });
+    res.status(200).send({
+      profile: req.engnr,
+      bank_details: bank,
+      avatar: req.engnr.avatar
+    });
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
