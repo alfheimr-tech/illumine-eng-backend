@@ -8,6 +8,8 @@ const Project_Docs = require('../models/projectDocs_model');
 const Client = require('../models/client_model');
 const FAQ = require('../models/faq_model');
 
+const { sendEmailNotification } = require('../email/account')
+
 // ENGINEER VIEWS PROJECT CARD
 
 exports.project_card = async (req, res) => {
@@ -61,7 +63,15 @@ exports.engineer_postsQuestion = async (req, res) => {
   try {
     const engineerQuestion = await FAQ.findOne({
       projectID: req.params.id
-    }).orFail(new Error('no such project present'));
+    }).populate({
+      path: 'projectID',
+      select: ['clientID', 'projectName'],
+      model: 'Project'
+    });
+
+    if(!engineerQuestion) {
+      throw new Error('No such project present!')
+    }
 
     engineerQuestion.faqs.push({
       engineerID: req.engnr.id,
@@ -69,7 +79,11 @@ exports.engineer_postsQuestion = async (req, res) => {
       ...req.body.faqs
     });
 
+    const client = await Client.findOne({ _id: engineerQuestion.projectID.clientID });
+
     await engineerQuestion.save();
+
+    sendEmailNotification(client.email, `You have a new Question from an Engineer!`, `${req.engnr.username} has posted a question regarding your project in the forum. Kindly review the same and provide a suitable response.` );
 
     res.status(200).send({ message: 'Question has been posted' });
   } catch (error) {
@@ -115,7 +129,7 @@ exports.engnr_uploads_projectdocs = async (req, res) => {
 
 exports.update_project_docs = async (req, res) => {
   try {
-    await Project_Docs.findOneAndUpdate(
+    const project_docs = await Project_Docs.findOneAndUpdate(
       { projectID: req.params.id },
       {
         $push: {
@@ -125,7 +139,16 @@ exports.update_project_docs = async (req, res) => {
           }
         }
       }
-    );
+    ).populate({
+      path: 'projectID',
+      select: ['clientID', 'projectName'],
+      model: 'Project'
+    });
+
+    const client = await Client.findOne({ _id: project_docs.projectID.clientID });
+
+    sendEmailNotification(client.email, `${req.engnr.username} has uploaded the files of ${project_docs.projectName}`, `Hi,\n${req.engnr.username} has uploaded the files of the ${project_docs.projectName} project. Kindly review the same and provide a feedback if there is any.` );
+
     res.send({ message: 'docs saved' });
   } catch (error) {
     res.status(400).send('fail');

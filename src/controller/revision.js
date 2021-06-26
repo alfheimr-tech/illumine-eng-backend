@@ -4,6 +4,9 @@ const { uuid } = require('uuidv4');
 const Revision = require('../models/revision_model');
 const { upload_docs } = require('../service');
 
+const { sendEmailNotification } = require('../email/account');
+const Client = require('../models/client_model');
+
 // eslint-disable-next-line no-undef
 urlFormatter = revision => {
   for (let i = 0; i < revision.length; i++) {
@@ -88,8 +91,12 @@ exports.revision_bid = async (req, res) => {
       }
     ).populate({
       path: 'projectID',
-      select: 'projectName -_id'
+      select: 'projectName clientID -_id'
     });
+
+    const client = await Client.findOne({ _id: revision.projectID.clientID });
+
+    sendEmailNotification(client.email, `Bid received on the revision request for ${revision.projectID.projectName} project.`, `Dear ${client.username},\nThe engineer has proposed a fee of $ ${req.body.revisionBidAmount} in response to the revision request you posted. Please review the same before responding.`);
 
     res.status(200).send({
       revision: revision.revisions,
@@ -118,8 +125,12 @@ exports.revision_rebid = async (req, res) => {
       }
     ).populate({
       path: 'projectID',
-      select: 'projectName -_id'
+      select: 'projectName clientID -_id'
     });
+
+    const client = await Client.findOne({ _id: revision.projectID.clientID });
+
+    sendEmailNotification(client.email, `Rebid received on the revision request for ${revision.projectID.projectName} project.`, `Dear ${client.username},\nThe engineer has proposed a fee of $ ${req.body.revisionBidAmount} in response to the rebid request you posted. Please review the same before responding.`);
 
     res.status(200).send({
       revision: revision.revisions,

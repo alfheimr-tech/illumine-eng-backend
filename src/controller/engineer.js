@@ -9,7 +9,7 @@ const Engineer = require('../models/engineer_model');
 const Bank = require('../models/bank_model');
 const Engineer_Docs = require('../models/engnrDocs_model');
 // const Notifications = require('../models/notifications_model');
-const { sendForgotPassword, sendWelcomeEmail } = require('../email/account');
+const { sendForgotPassword, sendWelcomeEmail, sendEmailNotification } = require('../email/account');
 
 // ENGINEER CREATES ACCOUNT
 
@@ -120,6 +120,8 @@ exports.create_engineer_profile = async (req, res) => {
     await bank.save();
 
     await req.engnr.save();
+
+    sendEmailNotification(undefined, `A warm welcome to you!`, `Hi ${req.engnr.username},\nWe are so thrilled to have on board an engineer of your caliber. ‘The Walnut Co’ is the ultimate professional freelancing website for Engineering Services. By registering with us, you have breathed a new life into your freelancing career. We hope you have an amazing experience with us.`);
 
     res.status(201).send({ message: 'profile has been created', documents });
   } catch (error) {
